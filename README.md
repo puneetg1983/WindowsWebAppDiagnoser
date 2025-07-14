@@ -45,3 +45,11 @@ WindowsWebAppDiagnoser is a command-line diagnostic tool designed to help you qu
 - ✅ **Post-Incident Analysis** - To understand what HTTP errors occurred during specific time periods
 - ✅ **Error Pattern Analysis** - To identify which HTTP error types are most impactful
 - ✅ **Basic Health Checks** - To get a quick overview of web app availability status
+
+
+# Download
+Get the latest release from the releases section, or run the following command to download the tool on Windows
+
+```
+curl -L -o WindowsWebAppDiagnoser.exe https://github.com/puneetg1983/WindowsWebAppDiagnoser/releases/latest/download/WindowsWebAppDiagnoser.exe
+```

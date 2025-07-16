@@ -47,9 +47,23 @@ WindowsWebAppDiagnoser is a command-line diagnostic tool designed to help you qu
 - ✅ **Basic Health Checks** - To get a quick overview of web app availability status
 
 
-# Download
+# Download - Windows
 Get the latest release from the releases section, or run the following command to download the tool on Windows
 
 ```
 curl -L -o WindowsWebAppDiagnoser.exe https://github.com/puneetg1983/WindowsWebAppDiagnoser/releases/latest/download/WindowsWebAppDiagnoser.exe
 ```
+
+# Azure Console (aka Cloud Shell)
+You can run this program from Azure Console by going to http://portal.azure.com/#cloudshell and running the below
+
+```
+curl -L -o WindowsWebAppDiagnoser https://github.com/puneetg1983/WindowsWebAppDiagnoser/releases/latest/download/WindowsWebAppDiagnoser && chmod +x WindowsWebAppDiagnoser
+```
+
+Then, run the tool like this
+```
+./WindowsWebAppDiagnoser -r <Azure_Resource_Id>
+```
+
+> Note: For this to work, you "must" 'Switch to Bash' cloud shell because WindowsWebAppDiagnoser (not WindowsWebAppDiagnoser.exe) is a Linux package

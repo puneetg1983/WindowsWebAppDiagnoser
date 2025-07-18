@@ -1,4 +1,4 @@
-# WindowsWebAppDiagnoser v1.0 - Release Notes
+# WindowsWebAppDiagnoser
 
 ## Overview
 WindowsWebAppDiagnoser is a command-line diagnostic tool designed to help you quickly identify and troubleshoot availability issues in your Windows-based Azure Web Apps. The tool analyzes HTTP request patterns and provides automated root cause analysis for server errors with actionable recommendations. The tool is designed to quickly identify HTTP error patterns in your Windows web apps and provide targeted recommendations for the most common server error scenarios.

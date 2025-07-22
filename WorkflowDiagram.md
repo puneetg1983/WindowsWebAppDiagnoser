@@ -61,35 +61,60 @@ flowchart TD
     OO --> QQ[Test Package URL Accessibility<br/>Verify Zip Integrity<br/>Check Configuration]
     
     %% HTTP 502 Analysis Branch
-    Q --> RR[Focus on Startup/Connectivity<br/>🚧 Work in Progress]
+    Q --> RR[Get HTTP 503 Detector Data<br/>for Detailed Analysis]
+    RR --> SS[Analyze Autoheal Events]
+    SS --> TT[Analyze Worker Process Crashes<br/>Event Logs Disabled]
+    TT --> UU[Analyze Low Memory Conditions]
+    UU --> VV{Found Specific Issues?}
+    VV -->|Yes| WW[Provide Targeted 502 Analysis]
+    VV -->|No| XX[General Startup/Connectivity Guidance]
     
-    %% HTTP 503 Analysis Branch
-    R --> SS{Sub-Status Code?}
-    SS -->|503.2| TT[Concurrent Requests Limit]
-    SS -->|503.3| UU[ASP.NET Queue Full]
-    SS -->|503.4| VV[FastCGI Queue Full]
-    SS -->|Other| WW[General Resource Exhaustion<br/>🚧 Work in Progress]
+    %% HTTP 503 Analysis Branch  
+    R --> YY[Check Module-Specific Failures<br/>ASP.NET Core Module]
+    YY --> ZZ{Module Issues Found?}
+    ZZ -->|Yes| AAA[Analyze Module Failures<br/>Event Logs Enabled]
+    ZZ -->|No| BBB[Check Sub-Status Codes]
+    
+    BBB --> CCC{Sub-Status Code?}
+    CCC -->|503.2| DDD[Concurrent Requests Limit]
+    CCC -->|503.3| EEE[ASP.NET Queue Full]
+    CCC -->|503.4| FFF[FastCGI Queue Full]
+    CCC -->|503.12| GGG[WebSocket Disabled]
+    CCC -->|503.13| HHH[WebSocket Limit Reached]
+    CCC -->|Other/None| III[Comprehensive Resource Analysis]
+    
+    III --> JJJ[Analyze Autoheal Events]
+    JJJ --> KKK[Analyze Worker Process Crashes<br/>Event Logs Disabled]
+    KKK --> LLL[Analyze Low Memory Conditions]
+    LLL --> MMM{Found Specific Issues?}
+    MMM -->|Yes| NNN[Provide Targeted 503 Analysis]
+    MMM -->|No| OOO[General Resource Exhaustion Guidance]
     
     %% Final outputs
-    KK --> XX[📊 Generate Analysis Report]
-    PP --> XX
-    QQ --> XX
-    AA --> XX
-    BB --> XX
-    CC --> XX
-    DD --> XX
-    EE --> XX
-    FF --> XX
-    GG --> XX
-    HH --> XX
-    II --> XX
-    RR --> XX
-    TT --> XX
-    UU --> XX
-    VV --> XX
-    WW --> XX
+    KK --> PPP[📊 Generate Analysis Report]
+    PP --> PPP
+    QQ --> PPP
+    AA --> PPP
+    BB --> PPP
+    CC --> PPP
+    DD --> PPP
+    EE --> PPP
+    FF --> PPP
+    GG --> PPP
+    HH --> PPP
+    II --> PPP
+    WW --> PPP
+    XX --> PPP
+    AAA --> PPP
+    DDD --> PPP
+    EEE --> PPP
+    FFF --> PPP
+    GGG --> PPP
+    HHH --> PPP
+    NNN --> PPP
+    OOO --> PPP
     
-    XX --> YY[✅ Root Cause Identification<br/>📋 Actionable Recommendations<br/>📈 Priority-Ranked Issues]
+    PPP --> QQQ[✅ Root Cause Identification<br/>📋 Actionable Recommendations<br/>📈 Priority-Ranked Issues]
     
     %% Styling
     classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:2px
@@ -100,13 +125,12 @@ flowchart TD
     classDef output fill:#e0f2f1,stroke:#00695c,stroke-width:2px
     classDef wip fill:#fafafa,stroke:#757575,stroke-width:2px,stroke-dasharray: 5 5
     
-    class A,J,YY startEnd
-    class B,E,I,T,V,Y,JJ,NN,SS decision
-    class D,G,H,K,L,M,N,S,U,W,X,LL,MM,OO,QQ process
-    class P,Q,R,Z,AA,BB,CC,DD,EE,FF,GG,HH,II,KK,PP analysis
+    class A,J,QQQ startEnd
+    class B,E,I,T,V,Y,JJ,NN,ZZ,CCC,MMM decision
+    class D,G,H,K,L,M,N,S,U,W,X,LL,MM,OO,QQ,RR,YY,BBB,III,JJJ,KKK,LLL process
+    class P,Q,R,Z,AA,BB,CC,DD,EE,FF,GG,HH,II,KK,PP,SS,TT,UU,VV,WW,XX,AAA,DDD,EEE,FFF,GGG,HHH,NNN,OOO analysis
     class C error
-    class XX,F output
-    class RR,WW wip
+    class PPP,F output
 ```
 
 ## Data Collection Timeline
@@ -161,19 +185,19 @@ graph LR
     B --> K[Timeouts<br/>500.121]
     B --> L[Node.js<br/>500.1000-1020]
     
-    C --> M[Startup/Connectivity<br/>🚧 In Progress]
+    C --> M[Comprehensive Startup Analysis<br/>Uses 503 Detector Data]
     
     D --> N[Concurrent Limits<br/>503.2]
     D --> O[Queue Full<br/>503.3-4]
-    D --> P[Resource Exhaustion<br/>🚧 In Progress]
+    D --> P[WebSocket Issues<br/>503.12-13]
+    D --> Q[Comprehensive Resource Analysis<br/>Autoheal + Crashes + Memory]
     
     classDef category fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
     classDef subcategory fill:#f1f8e9,stroke:#388e3c,stroke-width:1px
     classDef wip fill:#fafafa,stroke:#757575,stroke-width:1px,stroke-dasharray: 3 3
     
     class A,B,C,D category
-    class E,F,G,H,I,J,K,N,O subcategory
-    class M,P wip
+    class E,F,G,H,I,J,K,N,O,P,Q subcategory
 ```
 
 ## Key Features
@@ -184,27 +208,35 @@ graph LR
 - Priority-focused investigation
 
 ### 🔍 **Multi-Source Analysis**
-- Event Logs scanning
+- Event Logs scanning (configurable depth)
 - Application Insights integration
 - Profiler trace collection
 - Real-time failure monitoring
+- **Autoheal events analysis** for automatic restart detection
+- **Worker process crash analysis** with conditional event log scanning
+- **Low memory condition monitoring** for resource exhaustion
 
 ### 🛠️ **Specialized Tools**
 - ASP.NET Core startup simulation
 - Run from Package deployment analysis
 - Failed request polling
 - Cross-tenant resource detection
+- **Comprehensive HTTP 502/503 analysis** with SharedAnalyzer integration
+- **Prioritized diagnostic flow** preventing duplicate analysis
 
 ### 📊 **Comprehensive Coverage**
 - 20+ HTTP sub-status codes
 - .NET application focus
 - Deployment issue detection
 - Authentication problem analysis
+- **WebSocket-specific diagnostics** (503.12, 503.13)
+- **Resource exhaustion analysis** (autoheal, crashes, memory pressure)
+- **Module-specific failure detection** (ASP.NET Core Module)
 
 ### ⚡ **Current Limitations**
 - Performance issues not yet supported
-- HTTP 502/503 analysis in progress
 - Focus on availability over latency
+- **Note**: HTTP 502/503 analysis now includes comprehensive resource analysis through SharedAnalyzer integration
 
 ---
 

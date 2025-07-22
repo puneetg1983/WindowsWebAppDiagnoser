@@ -114,14 +114,24 @@ When availability drops below 99.99%, we dive deeper:
 - **500.1000-1020** - IIS Node.js Issues (1000-1020)
 
 ### **HTTP 502 Analysis:**
-- General Bad Gateway analysis (application startup, port binding, health checks)
-- *Work in progress - more comprehensive checks coming soon*
+- **Autoheal events analysis** - Detects automatic app restarts due to crashes, memory limits, or failures
+- **Worker process crash analysis** - Identifies application crashes and startup failures
+- **Low memory condition analysis** - Detects memory pressure and out-of-memory situations
+- **Fallback recommendations** provided when no specific issues are detected
 
 ### **HTTP 503 Sub-Status Codes We Analyze:**
 - **503.2** - Concurrent requests limit reached
-- **503.3** - ASP.NET queue full
+- **503.3** - ASP.NET queue full  
 - **503.4** - FastCGI queue full
-- *Work in progress - more comprehensive checks coming soon*
+- **503.12** - WebSocket request made for site with WebSocket disabled
+- **503.13** - Maximum concurrent WebSocket requests reached
+- **Comprehensive resource exhaustion analysis** including:
+  - **Autoheal events analysis** - Automatic app restarts due to various failures
+  - **Worker process crash detection** - Application crashes and startup issues
+  - **Low memory condition monitoring** - Memory pressure and OOM scenarios
+  - **Module-specific failure analysis** - ASP.NET Core Module issues
+  - **Event log analysis with configurable depth** - Startup failures and unhandled exceptions
+- **Prioritized analysis flow**: Module failures → Sub-status codes → Comprehensive resource analysis → General recommendations
 
 ## **Current Limitations**
 

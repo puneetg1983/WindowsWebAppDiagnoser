@@ -1,22 +1,15 @@
 # WindowsWebAppDiagnoser
 
 ## Overview
-WindowsWebAppDiagnoser is a command-line diagnostic tool designed to help you quickly identify and troubleshoot availability issues in your Windows-based Azure Web Apps. The tool analyzes HTTP request patterns and provides automated root cause analysis for server errors with actionable recommendations. The tool is designed to quickly identify HTTP error patterns in your Windows web apps and provide targeted recommendations for the most common server error scenarios.
+WindowsWebAppDiagnoser is a command-line diagnostic tool designed to help you quickly identify and troubleshoot availability issues in your Windows-based Azure Web Apps. The tool analyzes HTTP request patterns and provides automated root cause analysis for server errors with actionable recommendations.
+
+> **⚠️ Preview Notice**: This tool is currently in preview. New diagnostic scenarios and capabilities are being added regularly.
 
 ## What WindowsWebAppDiagnoser Can Do For You
 
-### 🔍 **Web App Health Analysis**
-- **Availability Calculation** - Automatically calculates and reports your web app's availability percentage based on HTTP response patterns
-- **Request Volume Analysis** - Analyzes total request counts and categorizes them by HTTP status codes (1xx, 2xx, 3xx, 4xx, 5xx)
-- **Platform Compatibility Check** - Verifies your web app is running on a supported Windows platform
-- **Resource Validation** - Validates Azure resource ID format and accessibility
-
-### 🚨 **HTTP Error Detection & Diagnosis**
-- **HTTP 500 Errors** - Identifies internal server errors with detailed sub-status analysis and specific recommendations
-- **HTTP 502 Errors** - Detects bad gateway issues and application startup problems
-- **HTTP 503 Errors** - Analyzes service unavailable conditions including thread exhaustion, FastCGI issues, and WebSocket limits
-- **Other 5xx Errors** - Basic analysis of additional server-side error conditions
-- **Error Prioritization** - Focuses analysis on the most frequent error types (up to 95% coverage)
+For detailed information about the tool's capabilities and diagnostic logic, see:
+- **[What Does The Tool Do](WhatDoesTheToolDo.md)** - Comprehensive guide to diagnostic capabilities and analysis workflow
+- **[Workflow Diagram](WorkflowDiagram.md)** - Visual representation of the diagnostic process and decision flow
 
 
 ## Key Benefits

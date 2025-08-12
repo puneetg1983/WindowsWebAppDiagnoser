@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web App Analysis Report - broken-core-failedstartup-noai-puneetg1983</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Dark theme (default) */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #475569;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+        }
+
+        [data-theme="light"] {
+            /* Light theme */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #0891b2;
+            --accent-purple: #7c3aed;
+            --accent-green: #059669;
+            --accent-orange: #d97706;
+            --accent-red: #dc2626;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --info: #2563eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .header-left h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.125rem;
+            margin-bottom: 20px;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid var(--error);
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.875rem;
+        }
+
+        .status-indicator::before {
+            content: '⚠️';
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        .status-indicator.critical::before { content: '🚨'; }
+        .status-indicator.warning::before { content: '⚠️'; }
+        .status-indicator.healthy::before { content: '✅'; }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .analysis-period-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 10px;
+        }
+
+        .analysis-period-info .label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .analysis-period-info .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: white;
+            line-height: 1.4;
+        }
+
+        .tool-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            display: flex;
+            gap: 16px;
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .tool-info-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tool-info-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+        }
+
+        .tool-info-value {
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+        }
+
+        .github-feedback-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .github-feedback-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+            color: white;
+        }
+
+        .github-feedback-btn::before {
+            content: '💬';
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .section {
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-left: 12px;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .section-icon.metrics { background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); }
+        .section-icon.observations { background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan)); }
+        .section-icon.recommendations { background: linear-gradient(135deg, var(--accent-orange), var(--accent-red)); }
+        .section-icon.exceptions { background: linear-gradient(135deg, var(--accent-red), var(--accent-purple)); }
+        .section-icon.charts { background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); }
+        .section-icon.urls { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); }
+
+        .metrics-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .metric-tile {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .metric-tile:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .metric-tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        .metric-tile.critical::before {
+            background: linear-gradient(90deg, var(--error), #dc2626);
+        }
+
+        .metric-tile.warning::before {
+            background: linear-gradient(90deg, var(--warning), #d97706);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .metric-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .metric-value.critical {
+            color: var(--error);
+        }
+
+        .metric-value.warning {
+            color: var(--warning);
+        }
+
+        .insights-list {
+            list-style: none;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent-cyan);
+            transition: background-color 0.3s ease;
+        }
+
+        .insight-item::before {
+            content: '📈';
+            margin-right: 16px;
+            font-size: 1.5rem;
+            margin-top: 2px;
+        }
+
+        .recommendations-list .insight-item {
+            border-left-color: var(--accent-orange);
+        }
+
+        .recommendations-list .insight-item::before {
+            content: '💡';
+        }
+
+        .chart-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 24px;
+        }
+
+        .chart-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart {
+            height: 300px;
+            border-radius: 8px;
+        }
+
+        /* Exception Analysis Styles */
+        .exceptions-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .exception-summary {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+            border: 1px solid var(--error);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .exception-summary h3 {
+            color: var(--error);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .exception-summary p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .exceptions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .exception-card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .exception-card:hover {
+            border-color: var(--error);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15);
+        }
+
+        .exception-header {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--error);
+        }
+
+        .exception-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .exception-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .copy-exception-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-exception-btn:hover {
+            background: var(--accent-cyan);
+            transform: translateY(-1px);
+        }
+
+        .copy-exception-btn::before {
+            content: '📋';
+        }
+
+        .copy-success {
+            background: var(--success) !important;
+        }
+
+        .copy-success::before {
+            content: '✅';
+        }
+
+        .exception-type {
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--error);
+        }
+
+        .exception-count-badge {
+            background: linear-gradient(135deg, var(--error), #dc2626);
+            border: 1px solid var(--error);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .exception-count-badge::before {
+            content: '🚨';
+        }
+
+        .exception-content {
+            padding: 20px;
+        }
+
+        .exception-message {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--error);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .exception-inner {
+            background: rgba(251, 146, 60, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .exception-details {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Stack trace gets 2/3, URLs get 1/3 */
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .detail-section {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .detail-section h4 {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-section h4::before {
+            content: '📍';
+            font-size: 1rem;
+        }
+
+        .detail-section h4.stack::before { content: '🔍'; }
+        .detail-section h4.urls::before { content: '🔗'; }
+
+        .stack-trace {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 6px;
+            max-width: 800px;      /* Keep horizontal constraint for readability */
+            overflow-x: auto;      /* Only horizontal scrollbar when needed */
+            white-space: pre;      /* Preserve line breaks but prevent wrapping */
+            border: 1px solid var(--border-color);
+            /* Enhanced scrollbar styling */
+            scrollbar-width: auto;
+            scrollbar-color: var(--error) rgba(255, 255, 255, 0.3);
+        }
+
+        /* Webkit scrollbar styling for better visibility */
+        .stack-trace::-webkit-scrollbar {
+            height: 12px;
+            width: 12px;
+        }
+
+        .stack-trace::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 6px;
+        }
+
+        .stack-trace::-webkit-scrollbar-thumb {
+            background: var(--error);
+            border-radius: 6px;
+            border: 2px solid rgba(0, 0, 0, 0.4);
+        }
+
+        .stack-trace::-webkit-scrollbar-thumb:hover {
+            background: rgba(239, 68, 68, 0.8);
+        }
+
+        .stack-trace::-webkit-scrollbar-corner {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .urls-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .url-item {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            word-break: break-all;
+        }
+
+        .url-item:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .timestamp-info {
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(100, 116, 139, 0.1);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .show-more-toggle {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-top: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .show-more-toggle:hover {
+            background: var(--accent-cyan);
+            transform: translateY(-1px);
+        }
+
+        /* Startup Exception Analysis Styles */
+        .startup-exceptions-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .startup-exception-summary {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.08));
+            border: 2px solid var(--error);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .startup-exception-summary h3 {
+            color: var(--error);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .startup-exception-summary p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .startup-exceptions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .startup-exception-card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 2px solid var(--error);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .startup-exception-card:hover {
+            border-color: var(--error);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.2);
+        }
+
+        .startup-exception-header {
+            background: linear-gradient(135deg, var(--error), #dc2626);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--error);
+        }
+
+        .startup-exception-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .startup-exception-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .startup-exception-type {
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: white;
+        }
+
+        .startup-exception-count-badge {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .startup-exception-count-badge::before {
+            content: '🔥';
+        }
+
+        .copy-startup-exception-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-startup-exception-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .copy-startup-exception-btn::before {
+            content: '📋';
+        }
+
+        .startup-exception-content {
+            padding: 20px;
+        }
+
+        .startup-exception-message {
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 4px solid var(--error);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .startup-exception-inner {
+            background: rgba(251, 146, 60, 0.15);
+            border-left: 4px solid var(--warning);
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .startup-exception-details {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .startup-detail-section {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .startup-detail-section h4 {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .startup-detail-section h4.stack::before { content: '🔍'; }
+        .startup-detail-section h4.module::before { content: '⚙️'; }
+
+        .module-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .module-info-item {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            word-break: break-all;
+        }
+
+        .module-info-item:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .startup-timestamp-info {
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Failed URLs container */
+        .failed-urls-container {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .failed-urls-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .failed-urls-table th,
+        .failed-urls-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .failed-urls-table th {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .metrics-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .exception-details {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .exception-header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .exception-header-left,
+            .exception-header-right {
+                flex-direction: column;
+                gap: 8px;
+                align-items: center;
+            }
+
+            .exception-type {
+                font-size: 1rem;
+            }
+
+            .stack-trace {
+                font-size: 0.75rem;
+                max-height: 150px;
+            }
+
+            .startup-exception-details {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .startup-exception-header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .startup-exception-header-left,
+            .startup-exception-header-right {
+                flex-direction: column;
+                gap: 8px;
+                align-items: center;
+            }
+
+            .startup-exception-type {
+                font-size: 1.1rem;
+            }
+
+            .startup-exception-summary h3 {
+                font-size: 1.3rem;
+            }
+
+            .startup-exception-summary p {
+                font-size: 1rem;
+            }
+
+            .tool-info {
+                flex-direction: column;
+                gap: 8px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>Azure Web App Diagnostics</h1>
+                    <p class="header-subtitle">Comprehensive analysis report for broken-core-failedstartup-noai-puneetg1983</p>
+                    <div class="status-indicator critical">critical Issues Detected</div>
+                    
+                    <div class="analysis-period-info">
+                        <div class="label">Analysis Period:</div>
+                        <div class="value">Aug 11, 2025 17:20 UTC - Aug 12, 2025 17:20 UTC (1.0 days)</div>
+                    </div>
+                    
+                    <div class="tool-info">
+                        <div class="tool-info-item">
+                            <span class="tool-info-label">Version:</span>
+                            <span class="tool-info-value">2.4-8+406556796565252b4497ffc91f6ec275511e8497</span>
+                        </div>
+                        <div class="tool-info-item">
+                            <span class="tool-info-label">Runtime:</span>
+                            <span class="tool-info-value">49.9s</span>
+                        </div>
+                        <div class="tool-info-item">
+                            <a href="https://github.com/puneetg1983/WindowsWebAppDiagnoser" target="_blank" class="github-feedback-btn">
+                                Issues/Feedback
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <span id="theme-icon">🌙</span>
+                        <span id="theme-text">Light Mode</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon metrics">📊</div>
+                    <h2>Performance Metrics</h2>
+                </div>
+                
+                <div class="metrics-dashboard">
+                    <div class="metric-tile critical">
+                        <div class="metric-header">
+                            <span class="metric-label">Overall Health</span>
+                            <div class="metric-icon">⚡</div>
+                        </div>
+                        <div class="metric-value critical">critical</div>
+                    </div>
+                    
+                    <div class="metric-tile">
+                        <div class="metric-header">
+                            <span class="metric-label">Availability Score</span>
+                            <div class="metric-icon">📈</div>
+                        </div>
+                        <div class="metric-value">0.03%</div>
+                    </div>
+                    
+                    <div class="metric-tile critical">
+                        <div class="metric-header">
+                            <span class="metric-label">Failed Requests</span>
+                            <div class="metric-icon">❌</div>
+                        </div>
+                        <div class="metric-value critical">14,457</div>
+                    </div>
+                    
+                    <div class="metric-tile">
+                        <div class="metric-header">
+                            <span class="metric-label">Total Requests</span>
+                            <div class="metric-icon">📊</div>
+                        </div>
+                        <div class="metric-value">14,458</div>
+                    </div>
+                    
+                    <div class="metric-tile">
+                        <div class="metric-header">
+                            <span class="metric-label">Successful Requests</span>
+                            <div class="metric-icon">✅</div>
+                        </div>
+                        <div class="metric-value">1</div>
+                    </div>
+                    
+                    <div class="metric-tile">
+                        <div class="metric-header">
+                            <span class="metric-label">Exception Types</span>
+                            <div class="metric-icon">🐛</div>
+                        </div>
+                        <div class="metric-value">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon observations">🔍</div>
+                    <h2>Key Insights</h2>
+                </div>
+                
+                <div class="insights-list">
+                    <ul class="observations-list">
+<li>Average availability is 0.03% over 24.00 hours (based on 14458 total requests)</li>
+<li>Successful requests: 4 (2xx + 3xx + 4xx), Server errors (5xx): 14454</li>
+<li>Total request failures detected: 14454</li>
+<li>HTTP 500: 14454 occurrences (100.00% of total failures)</li>
+<li>HTTP 500.30 - In-Process Startup Failure. The ASP.NET Core Module failed to start the application.</li>
+<li>Found 26 ASP.NET Core startup exception(s) in Application Event Log</li>
+<li>Exception Summary: 26 total exceptions grouped into 1 unique types</li>
+<li>Exception: System.InvalidOperationException (26 occurrences) - I am failing at startup! Catch me if you can!</li>
+<li>  Stack trace:</li>
+<li>    DiagnosticScenarios.Web.Program.Main(String[] args) in D:\a\broken-web-app\broken-web-app\AspNetCore\DiagnosticScenarios.Web\Program.cs:line 35</li>
+<li>    Process Id: 6196.</li>
+<li>    File Version: 18.0.25107.16. Description: IIS ASP.NET Core Module V2 Request Handler. Commit:</li>
+<li>  Time Range: 2025-08-12 01:02:15 to 2025-08-12 16:58:01 UTC</li>
+<li>Startup exception details successfully retrieved from Application Event Log</li>
+<li>Root cause category: ASP.NET Core Module</li>
+</ul>
+
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon recommendations">💡</div>
+                    <h2>Actionable Recommendations</h2>
+                </div>
+                
+                <div class="insights-list recommendations-list">
+                    <ul class="recommendations-list">
+<li>Review the exception details above to identify the specific startup failure cause</li>
+<li>Fix the identified exceptions in your application code</li>
+</ul>
+
+                </div>
+            </div>
+
+            
+
+            <div class="section">
+    <div class="section-header">
+        <div class="section-icon startup-exceptions">🚨</div>
+        <h2>ASP.NET Core Startup Exceptions</h2>
+    </div>
+    <div class="startup-exceptions-container">
+        <div class="startup-exception-summary">
+        <h3>Found 26 Critical Startup Failures</h3>
+        <p>Application startup failures preventing initialization - these require immediate attention</p>
+        </div>
+        <div class="startup-exceptions-grid">
+            <div class="startup-exception-card">
+                <div class="startup-exception-header">
+                    <div class="startup-exception-header-left">
+                        <div class="startup-exception-type">System.InvalidOperationException</div>
+                    </div>
+                    <div class="startup-exception-header-right">
+                        <div class="startup-exception-count-badge">26 occurrences</div>
+                        <button class="copy-startup-exception-btn" onclick="copyStartupExceptionToClipboard(this)">Copy</button>
+                    </div>
+                </div>
+                <div class="startup-exception-content">
+                    <div class="startup-exception-message">I am failing at startup! Catch me if you can!</div>
+                    <div class="startup-exception-details">
+                        <div class="startup-detail-section">
+                            <h4 class="stack">Stack Trace</h4>
+                            <div class="stack-trace">DiagnosticScenarios.Web.Program.Main(String[] args) in D:\a\broken-web-app\broken-web-app\AspNetCore\DiagnosticScenarios.Web\Program.cs:line 35
+
+Process Id: 14188.
+File Version: 18.0.25107.16. Description: IIS ASP.NET Core Module V2 Request Handler. Commit:</div>
+                        </div>
+                        <div class="startup-detail-section">
+                            <h4 class="module">Environment Details</h4>
+                            <div class="module-info-list">
+                                <div class="module-info-item"><strong>Application Path:</strong> /LM/W3SVC/764621187/ROOT</div>
+                                <div class="module-info-item"><strong>Physical Path:</strong> C:\home\site\wwwroot\</div>
+                                <div class="module-info-item"><strong>IIS AspNetCore Module:</strong> 18.0.25107.16</div>
+                                <div class="module-info-item"><strong>Process ID:</strong> 14188</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="startup-timestamp-info">
+                        <strong>Time Range:</strong> 2025-08-12 01:02:15 to 2025-08-12 16:58:01 UTC
+                    </div>
+                </div>
+            </div>
+    </div>
+    </div>
+</div>
+
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon urls">🔗</div>
+                    <h2>Failed Request URLs</h2>
+                </div>
+                
+                <div class="failed-urls-container">
+<p><strong>Total Failed URLs:</strong> 12</p>
+<table class="failed-urls-table">
+<thead>
+<tr><th>URL</th><th>Failure Count</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="url-cell">https://broken-core-failedstartup-noai-puneetg1983.azurewebsites.net/scenarios/http500_3actual</td>
+<td>1443</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-core-failedstartup-noai-puneetg1983.azurewebsites.net/scenarios/http500_2actual</td>
+<td>1442</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-core-failedstartup-noai-puneetg1983.azurewebsites.net/scenarios/http500_5actual</td>
+<td>1441</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-core-failedstartup-noai-puneetg1983.azurewebsites.net/scenarios/http500_1</td>
+<td>1441</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-core-failedstartup-noai-puneetg1983.azurewebsites.net/scenarios/http500_2</td>
+<td>1441</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-core-failedstartup-noai-puneetg1983.azurewebsites.net/scenarios/http500_1actual</td>
+<td>1440</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-core-failedstartup-noai-puneetg1983.azurewebsites.net/scenarios/http500_3</td>
+<td>1439</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-core-failedstartup-noai-puneetg1983.azurewebsites.net/scenarios/http500_4actual</td>
+<td>1439</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-core-failedstartup-noai-puneetg1983.azurewebsites.net/scenarios/http500_5</td>
+<td>1439</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-core-failedstartup-noai-puneetg1983.azurewebsites.net/scenarios/http500_4</td>
+<td>1438</td>
+</tr>
+<tr>
+<td class="url-cell">http://broken-core-failedstartup-noai-puneetg1983.azurewebsites.net/</td>
+<td>277</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-core-failedstartup-noai-puneetg1983.azurewebsites.net/</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon charts">📈</div>
+                    <h2>Performance Charts</h2>
+                </div>
+                
+                <div class="chart-section">
+                    <div class="chart-container">
+                        <h3 class="chart-title">App Availability Timeline</h3>
+                        <div id="availabilityChart" class="chart"></div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3 class="chart-title">Request Volume Over Time</h3>
+                        <div id="requestsChart" class="chart"></div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3 class="chart-title">Failed Request Latency Percentiles</h3>
+                        <div id="latencyChart" class="chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Light Mode';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Dark Mode';
+                localStorage.setItem('theme', 'light');
+            }
+            
+            // Refresh charts with new theme
+            setTimeout(() => {
+                initializeCharts();
+            }, 300);
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.getElementById('theme-icon').textContent = '☀️';
+                document.getElementById('theme-text').textContent = 'Dark Mode';
+            } else {
+                document.getElementById('theme-icon').textContent = '🌙';
+                document.getElementById('theme-text').textContent = 'Light Mode';
+            }
+        }
+
+        // Copy exception to clipboard functionality
+        function copyExceptionToClipboard(button) {
+            const exceptionCard = button.closest('.exception-card');
+            
+            // Extract exception data
+            const exceptionType = exceptionCard.querySelector('.exception-type').textContent;
+            const exceptionCount = exceptionCard.querySelector('.exception-count-badge').textContent;
+            const exceptionMessage = exceptionCard.querySelector('.exception-message').textContent;
+            const stackTrace = exceptionCard.querySelector('.stack-trace')?.textContent || 'No stack trace available';
+            
+            // Extract URLs if present
+            const urlItems = exceptionCard.querySelectorAll('.url-item');
+            const urls = Array.from(urlItems).map(item => item.textContent).join('\n');
+            
+            // Extract timestamp info
+            const timestampInfo = exceptionCard.querySelector('.timestamp-info')?.textContent || '';
+            
+            // Build clipboard content
+            let clipboardContent = `Exception Type: ${exceptionType}\n`;
+            clipboardContent += `Occurrences: ${exceptionCount}\n\n`;
+            clipboardContent += `Message:\n${exceptionMessage}\n\n`;
+            
+            if (urls) {
+                clipboardContent += `Affected URLs:\n${urls}\n\n`;
+            }
+            
+            clipboardContent += `Stack Trace:\n${stackTrace}\n\n`;
+            
+            if (timestampInfo) {
+                clipboardContent += `Timing Information:\n${timestampInfo}`;
+            }
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(clipboardContent).then(() => {
+                // Show success feedback
+                const originalText = button.textContent;
+                const originalClass = button.className;
+                
+                button.textContent = 'Copied!';
+                button.classList.add('copy-success');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.className = originalClass;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy to clipboard. Please try again.');
+            });
+        }
+
+        // Copy startup exception to clipboard functionality
+        function copyStartupExceptionToClipboard(button) {
+            const startupExceptionCard = button.closest('.startup-exception-card');
+            
+            // Extract startup exception data
+            const exceptionType = startupExceptionCard.querySelector('.startup-exception-type').textContent;
+            const exceptionCount = startupExceptionCard.querySelector('.startup-exception-count-badge').textContent;
+            const exceptionMessage = startupExceptionCard.querySelector('.startup-exception-message').textContent;
+            const stackTrace = startupExceptionCard.querySelector('.stack-trace')?.textContent || 'No stack trace available';
+            
+            // Extract module information if present
+            const moduleItems = startupExceptionCard.querySelectorAll('.module-info-item');
+            const moduleInfo = Array.from(moduleItems).map(item => item.textContent).join('\n');
+            
+            // Extract timestamp info
+            const timestampInfo = startupExceptionCard.querySelector('.startup-timestamp-info')?.textContent || '';
+            
+            // Extract inner exception if present
+            const innerException = startupExceptionCard.querySelector('.startup-exception-inner')?.textContent || '';
+            
+            // Build clipboard content
+            let clipboardContent = `ASP.NET Core Startup Exception Type: ${exceptionType}\n`;
+            clipboardContent += `Occurrences: ${exceptionCount}\n\n`;
+            clipboardContent += `Message:\n${exceptionMessage}\n\n`;
+            
+            if (innerException) {
+                clipboardContent += `${innerException}\n\n`;
+            }
+            
+            if (moduleInfo) {
+                clipboardContent += `Environment Details:\n${moduleInfo}\n\n`;
+            }
+            
+            clipboardContent += `Stack Trace:\n${stackTrace}\n\n`;
+            
+            if (timestampInfo) {
+                clipboardContent += `Timing Information:\n${timestampInfo}`;
+            }
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(clipboardContent).then(() => {
+                // Show success feedback
+                const originalText = button.textContent;
+                const originalClass = button.className;
+                
+                button.textContent = 'Copied!';
+                button.classList.add('copy-success');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.className = originalClass;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy startup exception: ', err);
+                alert('Failed to copy to clipboard. Please try again.');
+            });
+        }
+
+        // Toggle URLs functionality
+        function toggleUrls(button) {
+            const hiddenUrls = button.nextElementSibling;
+            if (hiddenUrls.style.display === 'none') {
+                hiddenUrls.style.display = 'block';
+                button.textContent = 'Show fewer URLs';
+            } else {
+                hiddenUrls.style.display = 'none';
+                const hiddenCount = hiddenUrls.children.length;
+                button.textContent = `Show ${hiddenCount} more URLs`;
+            }
+        }
+
+        // Chart data
+        const availabilityData = [{"timestamp":"2025-08-11T17:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T17:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T17:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T17:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T17:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T17:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T17:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T17:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T18:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T18:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T18:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T18:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T18:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T18:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T18:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T18:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T18:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T18:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T18:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T18:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T19:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T19:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T19:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T19:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T19:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T19:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T19:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T19:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T19:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T19:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T19:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T19:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T20:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T20:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T20:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T20:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T20:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T20:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T20:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T20:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T20:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T20:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T20:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T20:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T21:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T21:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T21:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T21:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T21:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T21:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T21:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T21:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T21:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T21:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T21:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T21:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T22:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T22:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T22:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T22:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T22:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T22:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T22:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T22:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T22:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T22:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T22:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T22:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T23:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T23:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T23:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T23:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T23:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T23:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T23:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T23:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T23:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T23:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T23:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-11T23:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T00:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T00:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T00:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T00:15:00.000Z","appAvailability":7.27,"platformAvailability":100},{"timestamp":"2025-08-12T00:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T00:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T00:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T00:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T00:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T00:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T00:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T00:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T01:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T01:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T01:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T01:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T01:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T01:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T01:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T01:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T01:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T01:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T01:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T01:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T02:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T02:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T02:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T02:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T02:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T02:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T02:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T02:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T02:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T02:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T02:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T02:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T03:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T03:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T03:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T03:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T03:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T03:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T03:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T03:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T03:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T03:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T03:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T03:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T04:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T04:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T04:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T04:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T04:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T04:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T04:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T04:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T04:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T04:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T04:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T04:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T05:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T05:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T05:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T05:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T05:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T05:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T05:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T05:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T05:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T05:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T05:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T05:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T06:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T06:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T06:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T06:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T06:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T06:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T06:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T06:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T06:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T06:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T06:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T06:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T07:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T07:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T07:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T07:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T07:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T07:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T07:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T07:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T07:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T07:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T07:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T07:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T08:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T08:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T08:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T08:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T08:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T08:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T08:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T08:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T08:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T08:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T08:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T08:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T09:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T09:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T09:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T09:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T09:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T09:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T09:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T09:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T09:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T09:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T09:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T09:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T10:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T10:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T10:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T10:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T10:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T10:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T10:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T10:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T10:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T10:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T10:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T10:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T11:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T11:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T11:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T11:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T11:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T11:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T11:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T11:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T11:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T11:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T11:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T11:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T12:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T12:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T12:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T12:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T12:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T12:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T12:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T12:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T12:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T12:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T12:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T12:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T13:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T13:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T13:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T13:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T13:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T13:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T13:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T13:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T13:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T13:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T13:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T13:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T14:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T14:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T14:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T14:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T14:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T14:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T14:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T14:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T14:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T14:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T14:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T14:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T15:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T15:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T15:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T15:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T15:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T15:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T15:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T15:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T15:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T15:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T15:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T15:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T16:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T16:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T16:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T16:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T16:20:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T16:25:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T16:30:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T16:35:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T16:40:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T16:45:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T16:50:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T16:55:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T17:00:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T17:05:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T17:10:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T17:15:00.000Z","appAvailability":0,"platformAvailability":100},{"timestamp":"2025-08-12T17:20:00.000Z","appAvailability":0,"platformAvailability":100}];
+        const requestsData = [{"timestamp":"2025-08-11T17:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T17:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T17:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T17:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T17:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T17:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T17:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T17:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T18:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T18:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T18:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T18:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T18:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T18:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T18:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T18:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T18:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T18:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T18:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T18:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T19:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T19:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T19:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T19:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T19:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T19:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T19:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T19:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T19:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T19:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T19:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T19:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T20:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T20:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T20:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T20:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T20:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T20:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T20:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T20:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T20:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T20:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T20:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T20:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T21:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T21:05:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-11T21:10:00.000Z","total":51,"successful":0,"errors":51,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":51},{"timestamp":"2025-08-11T21:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T21:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T21:25:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-11T21:30:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-11T21:35:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-11T21:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T21:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T21:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T21:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T22:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T22:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T22:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T22:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T22:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T22:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T22:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T22:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T22:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T22:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T22:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T22:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T23:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T23:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T23:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T23:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T23:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T23:25:00.000Z","total":53,"successful":0,"errors":53,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":53},{"timestamp":"2025-08-11T23:30:00.000Z","total":62,"successful":0,"errors":62,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":62},{"timestamp":"2025-08-11T23:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T23:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T23:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T23:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-11T23:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T00:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T00:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T00:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T00:15:00.000Z","total":55,"successful":4,"errors":51,"http2xx":0,"http3xx":1,"http4xx":3,"http5xx":51},{"timestamp":"2025-08-12T00:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T00:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T00:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T00:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T00:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T00:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T00:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T00:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T01:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T01:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T01:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T01:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T01:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T01:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T01:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T01:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T01:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T01:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T01:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T01:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T02:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T02:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T02:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T02:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T02:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T02:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T02:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T02:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T02:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T02:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T02:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T02:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T03:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T03:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T03:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T03:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T03:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T03:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T03:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T03:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T03:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T03:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T03:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T03:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T04:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T04:05:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-12T04:10:00.000Z","total":51,"successful":0,"errors":51,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":51},{"timestamp":"2025-08-12T04:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T04:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T04:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T04:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T04:35:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-12T04:40:00.000Z","total":51,"successful":0,"errors":51,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":51},{"timestamp":"2025-08-12T04:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T04:50:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-12T04:55:00.000Z","total":51,"successful":0,"errors":51,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":51},{"timestamp":"2025-08-12T05:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T05:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T05:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T05:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T05:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T05:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T05:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T05:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T05:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T05:45:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-12T05:50:00.000Z","total":51,"successful":0,"errors":51,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":51},{"timestamp":"2025-08-12T05:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T06:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T06:05:00.000Z","total":46,"successful":0,"errors":46,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":46},{"timestamp":"2025-08-12T06:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T06:15:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-12T06:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T06:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T06:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T06:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T06:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T06:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T06:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T06:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T07:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T07:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T07:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T07:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T07:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T07:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T07:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T07:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T07:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T07:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T07:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T07:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T08:00:00.000Z","total":47,"successful":0,"errors":47,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":47},{"timestamp":"2025-08-12T08:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T08:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T08:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T08:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T08:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T08:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T08:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T08:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T08:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T08:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T08:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T09:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T09:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T09:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T09:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T09:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T09:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T09:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T09:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T09:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T09:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T09:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T09:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T10:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T10:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T10:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T10:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T10:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T10:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T10:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T10:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T10:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T10:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T10:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T10:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T11:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T11:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T11:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T11:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T11:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T11:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T11:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T11:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T11:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T11:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T11:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T11:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T12:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T12:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T12:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T12:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T12:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T12:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T12:30:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-12T12:35:00.000Z","total":51,"successful":0,"errors":51,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":51},{"timestamp":"2025-08-12T12:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T12:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T12:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T12:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T13:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T13:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T13:10:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-12T13:15:00.000Z","total":51,"successful":0,"errors":51,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":51},{"timestamp":"2025-08-12T13:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T13:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T13:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T13:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T13:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T13:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T13:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T13:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T14:00:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-12T14:05:00.000Z","total":51,"successful":0,"errors":51,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":51},{"timestamp":"2025-08-12T14:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T14:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T14:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T14:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T14:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T14:35:00.000Z","total":49,"successful":0,"errors":49,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":49},{"timestamp":"2025-08-12T14:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T14:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T14:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T14:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T15:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T15:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T15:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T15:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T15:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T15:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T15:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T15:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T15:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T15:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T15:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T15:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T16:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T16:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T16:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T16:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T16:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T16:25:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T16:30:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T16:35:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T16:40:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T16:45:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T16:50:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T16:55:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T17:00:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T17:05:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T17:10:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T17:15:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50},{"timestamp":"2025-08-12T17:20:00.000Z","total":50,"successful":0,"errors":50,"http2xx":0,"http3xx":0,"http4xx":0,"http5xx":50}];
+        const latencyData = [{"timestamp":"2025-08-11T10:20:00.000Z","p50":16,"p90":375,"p95":515},{"timestamp":"2025-08-11T10:25:00.000Z","p50":16,"p90":47,"p95":109},{"timestamp":"2025-08-11T10:30:00.000Z","p50":16,"p90":359,"p95":406},{"timestamp":"2025-08-11T10:35:00.000Z","p50":16,"p90":313,"p95":484},{"timestamp":"2025-08-11T10:40:00.000Z","p50":16,"p90":156,"p95":250},{"timestamp":"2025-08-11T10:45:00.000Z","p50":16,"p90":203,"p95":281},{"timestamp":"2025-08-11T10:50:00.000Z","p50":16,"p90":94,"p95":203},{"timestamp":"2025-08-11T10:55:00.000Z","p50":172,"p90":562,"p95":813},{"timestamp":"2025-08-11T11:00:00.000Z","p50":16,"p90":219,"p95":547},{"timestamp":"2025-08-11T11:05:00.000Z","p50":16,"p90":203,"p95":235},{"timestamp":"2025-08-11T11:10:00.000Z","p50":15,"p90":94,"p95":172},{"timestamp":"2025-08-11T11:15:00.000Z","p50":203,"p90":531,"p95":641},{"timestamp":"2025-08-11T11:20:00.000Z","p50":62,"p90":328,"p95":406},{"timestamp":"2025-08-11T11:25:00.000Z","p50":31,"p90":406,"p95":453},{"timestamp":"2025-08-11T11:30:00.000Z","p50":16,"p90":109,"p95":125},{"timestamp":"2025-08-11T11:35:00.000Z","p50":172,"p90":641,"p95":922},{"timestamp":"2025-08-11T11:40:00.000Z","p50":31,"p90":500,"p95":578},{"timestamp":"2025-08-11T11:45:00.000Z","p50":16,"p90":109,"p95":313},{"timestamp":"2025-08-11T11:50:00.000Z","p50":109,"p90":390,"p95":516},{"timestamp":"2025-08-11T11:55:00.000Z","p50":15,"p90":360,"p95":453},{"timestamp":"2025-08-11T12:00:00.000Z","p50":16,"p90":62,"p95":125},{"timestamp":"2025-08-11T12:05:00.000Z","p50":110,"p90":484,"p95":687},{"timestamp":"2025-08-11T12:10:00.000Z","p50":16,"p90":125,"p95":234},{"timestamp":"2025-08-11T12:15:00.000Z","p50":16,"p90":109,"p95":265},{"timestamp":"2025-08-11T12:20:00.000Z","p50":47,"p90":282,"p95":610},{"timestamp":"2025-08-11T12:25:00.000Z","p50":16,"p90":297,"p95":453},{"timestamp":"2025-08-11T12:30:00.000Z","p50":16,"p90":250,"p95":593},{"timestamp":"2025-08-11T12:35:00.000Z","p50":16,"p90":110,"p95":297},{"timestamp":"2025-08-11T12:40:00.000Z","p50":16,"p90":47,"p95":203},{"timestamp":"2025-08-11T12:45:00.000Z","p50":140,"p90":812,"p95":1031},{"timestamp":"2025-08-11T12:50:00.000Z","p50":94,"p90":500,"p95":547},{"timestamp":"2025-08-11T12:55:00.000Z","p50":16,"p90":109,"p95":281},{"timestamp":"2025-08-11T13:00:00.000Z","p50":16,"p90":141,"p95":281},{"timestamp":"2025-08-11T13:05:00.000Z","p50":16,"p90":141,"p95":187},{"timestamp":"2025-08-11T13:10:00.000Z","p50":16,"p90":78,"p95":187},{"timestamp":"2025-08-11T13:15:00.000Z","p50":46,"p90":500,"p95":703},{"timestamp":"2025-08-11T13:20:00.000Z","p50":16,"p90":140,"p95":391},{"timestamp":"2025-08-11T13:25:00.000Z","p50":16,"p90":93,"p95":235},{"timestamp":"2025-08-11T13:30:00.000Z","p50":16,"p90":47,"p95":203},{"timestamp":"2025-08-11T13:35:00.000Z","p50":16,"p90":234,"p95":297},{"timestamp":"2025-08-11T13:40:00.000Z","p50":234,"p90":578,"p95":1578},{"timestamp":"2025-08-11T13:45:00.000Z","p50":16,"p90":312,"p95":422},{"timestamp":"2025-08-11T13:50:00.000Z","p50":15,"p90":78,"p95":234},{"timestamp":"2025-08-11T13:55:00.000Z","p50":16,"p90":125,"p95":281},{"timestamp":"2025-08-11T14:00:00.000Z","p50":31,"p90":266,"p95":329},{"timestamp":"2025-08-11T14:05:00.000Z","p50":31,"p90":454,"p95":594},{"timestamp":"2025-08-11T14:10:00.000Z","p50":32,"p90":359,"p95":437},{"timestamp":"2025-08-11T14:15:00.000Z","p50":187,"p90":406,"p95":500},{"timestamp":"2025-08-11T14:20:00.000Z","p50":15,"p90":172,"p95":234},{"timestamp":"2025-08-11T14:25:00.000Z","p50":16,"p90":265,"p95":1015},{"timestamp":"2025-08-11T14:30:00.000Z","p50":47,"p90":328,"p95":360},{"timestamp":"2025-08-11T14:35:00.000Z","p50":79,"p90":625,"p95":640},{"timestamp":"2025-08-11T14:40:00.000Z","p50":16,"p90":203,"p95":375},{"timestamp":"2025-08-11T14:45:00.000Z","p50":78,"p90":453,"p95":594},{"timestamp":"2025-08-11T14:50:00.000Z","p50":16,"p90":63,"p95":109},{"timestamp":"2025-08-11T14:55:00.000Z","p50":63,"p90":531,"p95":687},{"timestamp":"2025-08-11T15:00:00.000Z","p50":16,"p90":203,"p95":250},{"timestamp":"2025-08-11T15:05:00.000Z","p50":16,"p90":79,"p95":234},{"timestamp":"2025-08-11T15:10:00.000Z","p50":188,"p90":421,"p95":563},{"timestamp":"2025-08-11T15:15:00.000Z","p50":16,"p90":250,"p95":516},{"timestamp":"2025-08-11T15:20:00.000Z","p50":47,"p90":375,"p95":453},{"timestamp":"2025-08-11T15:25:00.000Z","p50":16,"p90":79,"p95":203},{"timestamp":"2025-08-11T15:30:00.000Z","p50":15,"p90":93,"p95":141},{"timestamp":"2025-08-11T15:35:00.000Z","p50":47,"p90":718,"p95":813},{"timestamp":"2025-08-11T15:40:00.000Z","p50":16,"p90":515,"p95":656},{"timestamp":"2025-08-11T15:45:00.000Z","p50":16,"p90":47,"p95":125},{"timestamp":"2025-08-11T15:50:00.000Z","p50":16,"p90":47,"p95":109},{"timestamp":"2025-08-11T15:55:00.000Z","p50":15,"p90":32,"p95":47},{"timestamp":"2025-08-11T16:00:00.000Z","p50":16,"p90":32,"p95":47},{"timestamp":"2025-08-11T16:05:00.000Z","p50":16,"p90":219,"p95":265},{"timestamp":"2025-08-11T16:10:00.000Z","p50":47,"p90":421,"p95":625},{"timestamp":"2025-08-11T16:15:00.000Z","p50":15,"p90":32,"p95":63},{"timestamp":"2025-08-11T16:20:00.000Z","p50":16,"p90":610,"p95":906},{"timestamp":"2025-08-11T16:25:00.000Z","p50":16,"p90":344,"p95":422},{"timestamp":"2025-08-11T16:30:00.000Z","p50":16,"p90":172,"p95":250},{"timestamp":"2025-08-11T16:35:00.000Z","p50":16,"p90":47,"p95":328},{"timestamp":"2025-08-11T16:40:00.000Z","p50":16,"p90":63,"p95":187},{"timestamp":"2025-08-11T16:45:00.000Z","p50":16,"p90":156,"p95":203},{"timestamp":"2025-08-11T16:50:00.000Z","p50":16,"p90":594,"p95":1172},{"timestamp":"2025-08-11T16:55:00.000Z","p50":31,"p90":375,"p95":484},{"timestamp":"2025-08-11T17:00:00.000Z","p50":16,"p90":125,"p95":297},{"timestamp":"2025-08-11T17:05:00.000Z","p50":16,"p90":94,"p95":219},{"timestamp":"2025-08-11T17:10:00.000Z","p50":16,"p90":359,"p95":485},{"timestamp":"2025-08-11T17:15:00.000Z","p50":156,"p90":500,"p95":750},{"timestamp":"2025-08-11T17:20:00.000Z","p50":16,"p90":156,"p95":219},{"timestamp":"2025-08-11T17:25:00.000Z","p50":141,"p90":515,"p95":625},{"timestamp":"2025-08-11T17:30:00.000Z","p50":63,"p90":516,"p95":718},{"timestamp":"2025-08-11T17:35:00.000Z","p50":16,"p90":422,"p95":812},{"timestamp":"2025-08-11T17:40:00.000Z","p50":31,"p90":313,"p95":360},{"timestamp":"2025-08-11T17:45:00.000Z","p50":16,"p90":140,"p95":203},{"timestamp":"2025-08-11T17:50:00.000Z","p50":32,"p90":375,"p95":500},{"timestamp":"2025-08-11T17:55:00.000Z","p50":110,"p90":391,"p95":718},{"timestamp":"2025-08-11T18:00:00.000Z","p50":31,"p90":391,"p95":641},{"timestamp":"2025-08-11T18:05:00.000Z","p50":16,"p90":282,"p95":672},{"timestamp":"2025-08-11T18:10:00.000Z","p50":16,"p90":266,"p95":453},{"timestamp":"2025-08-11T18:15:00.000Z","p50":16,"p90":63,"p95":157},{"timestamp":"2025-08-11T18:20:00.000Z","p50":16,"p90":78,"p95":344},{"timestamp":"2025-08-11T18:25:00.000Z","p50":32,"p90":547,"p95":812},{"timestamp":"2025-08-11T18:30:00.000Z","p50":16,"p90":281,"p95":344},{"timestamp":"2025-08-11T18:35:00.000Z","p50":62,"p90":438,"p95":1078},{"timestamp":"2025-08-11T18:40:00.000Z","p50":16,"p90":141,"p95":266},{"timestamp":"2025-08-11T18:45:00.000Z","p50":16,"p90":187,"p95":313},{"timestamp":"2025-08-11T18:50:00.000Z","p50":141,"p90":719,"p95":906},{"timestamp":"2025-08-11T18:55:00.000Z","p50":31,"p90":297,"p95":329},{"timestamp":"2025-08-11T19:00:00.000Z","p50":16,"p90":47,"p95":172},{"timestamp":"2025-08-11T19:05:00.000Z","p50":16,"p90":47,"p95":187},{"timestamp":"2025-08-11T19:10:00.000Z","p50":16,"p90":78,"p95":156},{"timestamp":"2025-08-11T19:15:00.000Z","p50":16,"p90":172,"p95":282},{"timestamp":"2025-08-11T19:20:00.000Z","p50":109,"p90":391,"p95":500},{"timestamp":"2025-08-11T19:25:00.000Z","p50":16,"p90":32,"p95":94},{"timestamp":"2025-08-11T19:30:00.000Z","p50":16,"p90":188,"p95":250},{"timestamp":"2025-08-11T19:35:00.000Z","p50":16,"p90":125,"p95":203},{"timestamp":"2025-08-11T19:40:00.000Z","p50":32,"p90":656,"p95":829},{"timestamp":"2025-08-11T19:45:00.000Z","p50":31,"p90":515,"p95":625},{"timestamp":"2025-08-11T19:50:00.000Z","p50":110,"p90":531,"p95":703},{"timestamp":"2025-08-11T19:55:00.000Z","p50":141,"p90":454,"p95":469},{"timestamp":"2025-08-11T20:00:00.000Z","p50":31,"p90":406,"p95":828},{"timestamp":"2025-08-11T20:05:00.000Z","p50":32,"p90":500,"p95":734},{"timestamp":"2025-08-11T20:10:00.000Z","p50":391,"p90":984,"p95":1219},{"timestamp":"2025-08-11T20:15:00.000Z","p50":328,"p90":1141,"p95":1375},{"timestamp":"2025-08-11T20:20:00.000Z","p50":265,"p90":672,"p95":906},{"timestamp":"2025-08-11T20:25:00.000Z","p50":156,"p90":406,"p95":454},{"timestamp":"2025-08-11T20:30:00.000Z","p50":94,"p90":453,"p95":469},{"timestamp":"2025-08-11T20:35:00.000Z","p50":16,"p90":109,"p95":250},{"timestamp":"2025-08-11T20:40:00.000Z","p50":16,"p90":141,"p95":250},{"timestamp":"2025-08-11T20:45:00.000Z","p50":78,"p90":469,"p95":640},{"timestamp":"2025-08-11T20:50:00.000Z","p50":16,"p90":235,"p95":266},{"timestamp":"2025-08-11T20:55:00.000Z","p50":16,"p90":63,"p95":203},{"timestamp":"2025-08-11T21:00:00.000Z","p50":125,"p90":484,"p95":578},{"timestamp":"2025-08-11T21:05:00.000Z","p50":594,"p90":1610,"p95":1750},{"timestamp":"2025-08-11T21:10:00.000Z","p50":734,"p90":1484,"p95":1641},{"timestamp":"2025-08-11T21:15:00.000Z","p50":375,"p90":906,"p95":1094},{"timestamp":"2025-08-11T21:20:00.000Z","p50":47,"p90":672,"p95":750},{"timestamp":"2025-08-11T21:25:00.000Z","p50":203,"p90":578,"p95":688},{"timestamp":"2025-08-11T21:30:00.000Z","p50":16,"p90":203,"p95":265},{"timestamp":"2025-08-11T21:35:00.000Z","p50":94,"p90":813,"p95":1188},{"timestamp":"2025-08-11T21:40:00.000Z","p50":500,"p90":1110,"p95":1750},{"timestamp":"2025-08-11T21:45:00.000Z","p50":156,"p90":578,"p95":969},{"timestamp":"2025-08-11T21:50:00.000Z","p50":375,"p90":906,"p95":1063},{"timestamp":"2025-08-11T21:55:00.000Z","p50":156,"p90":547,"p95":1265},{"timestamp":"2025-08-11T22:00:00.000Z","p50":63,"p90":500,"p95":703},{"timestamp":"2025-08-11T22:05:00.000Z","p50":16,"p90":172,"p95":453},{"timestamp":"2025-08-11T22:10:00.000Z","p50":94,"p90":516,"p95":656},{"timestamp":"2025-08-11T22:15:00.000Z","p50":94,"p90":422,"p95":625},{"timestamp":"2025-08-11T22:20:00.000Z","p50":16,"p90":188,"p95":312},{"timestamp":"2025-08-11T22:25:00.000Z","p50":16,"p90":141,"p95":281},{"timestamp":"2025-08-11T22:30:00.000Z","p50":109,"p90":625,"p95":1015},{"timestamp":"2025-08-11T22:35:00.000Z","p50":235,"p90":875,"p95":2297},{"timestamp":"2025-08-11T22:40:00.000Z","p50":110,"p90":547,"p95":859},{"timestamp":"2025-08-11T22:45:00.000Z","p50":16,"p90":94,"p95":328},{"timestamp":"2025-08-11T22:50:00.000Z","p50":16,"p90":437,"p95":1468},{"timestamp":"2025-08-11T22:55:00.000Z","p50":203,"p90":469,"p95":547},{"timestamp":"2025-08-11T23:00:00.000Z","p50":16,"p90":125,"p95":234},{"timestamp":"2025-08-11T23:05:00.000Z","p50":16,"p90":187,"p95":328},{"timestamp":"2025-08-11T23:10:00.000Z","p50":16,"p90":203,"p95":328},{"timestamp":"2025-08-11T23:15:00.000Z","p50":32,"p90":360,"p95":391},{"timestamp":"2025-08-11T23:20:00.000Z","p50":16,"p90":328,"p95":453},{"timestamp":"2025-08-11T23:25:00.000Z","p50":16,"p90":62,"p95":203},{"timestamp":"2025-08-11T23:30:00.000Z","p50":16,"p90":250,"p95":328},{"timestamp":"2025-08-11T23:35:00.000Z","p50":47,"p90":391,"p95":656},{"timestamp":"2025-08-11T23:40:00.000Z","p50":16,"p90":203,"p95":1046},{"timestamp":"2025-08-11T23:45:00.000Z","p50":78,"p90":719,"p95":938},{"timestamp":"2025-08-11T23:50:00.000Z","p50":15,"p90":32,"p95":140},{"timestamp":"2025-08-11T23:55:00.000Z","p50":16,"p90":110,"p95":281},{"timestamp":"2025-08-12T00:00:00.000Z","p50":16,"p90":31,"p95":47},{"timestamp":"2025-08-12T00:05:00.000Z","p50":16,"p90":172,"p95":219},{"timestamp":"2025-08-12T00:10:00.000Z","p50":62,"p90":438,"p95":937},{"timestamp":"2025-08-12T00:15:00.000Z","p50":93,"p90":437,"p95":750},{"timestamp":"2025-08-12T00:20:00.000Z","p50":16,"p90":344,"p95":390},{"timestamp":"2025-08-12T00:25:00.000Z","p50":172,"p90":640,"p95":968},{"timestamp":"2025-08-12T00:30:00.000Z","p50":31,"p90":469,"p95":657},{"timestamp":"2025-08-12T00:35:00.000Z","p50":62,"p90":360,"p95":484},{"timestamp":"2025-08-12T00:40:00.000Z","p50":16,"p90":219,"p95":343},{"timestamp":"2025-08-12T00:45:00.000Z","p50":16,"p90":94,"p95":235},{"timestamp":"2025-08-12T00:50:00.000Z","p50":16,"p90":94,"p95":172},{"timestamp":"2025-08-12T00:55:00.000Z","p50":16,"p90":32,"p95":235},{"timestamp":"2025-08-12T01:00:00.000Z","p50":31,"p90":532,"p95":547},{"timestamp":"2025-08-12T01:05:00.000Z","p50":16,"p90":312,"p95":484},{"timestamp":"2025-08-12T01:10:00.000Z","p50":16,"p90":141,"p95":296},{"timestamp":"2025-08-12T01:15:00.000Z","p50":15,"p90":63,"p95":219},{"timestamp":"2025-08-12T01:20:00.000Z","p50":16,"p90":188,"p95":312},{"timestamp":"2025-08-12T01:25:00.000Z","p50":16,"p90":344,"p95":672},{"timestamp":"2025-08-12T01:30:00.000Z","p50":62,"p90":500,"p95":781},{"timestamp":"2025-08-12T01:35:00.000Z","p50":141,"p90":532,"p95":672},{"timestamp":"2025-08-12T01:40:00.000Z","p50":62,"p90":375,"p95":985},{"timestamp":"2025-08-12T01:45:00.000Z","p50":110,"p90":500,"p95":765},{"timestamp":"2025-08-12T01:50:00.000Z","p50":31,"p90":359,"p95":531},{"timestamp":"2025-08-12T01:55:00.000Z","p50":16,"p90":32,"p95":110},{"timestamp":"2025-08-12T02:00:00.000Z","p50":78,"p90":500,"p95":1032},{"timestamp":"2025-08-12T02:05:00.000Z","p50":187,"p90":406,"p95":563},{"timestamp":"2025-08-12T02:10:00.000Z","p50":281,"p90":703,"p95":875},{"timestamp":"2025-08-12T02:15:00.000Z","p50":16,"p90":359,"p95":469},{"timestamp":"2025-08-12T02:20:00.000Z","p50":16,"p90":78,"p95":157},{"timestamp":"2025-08-12T02:25:00.000Z","p50":16,"p90":125,"p95":250},{"timestamp":"2025-08-12T02:30:00.000Z","p50":16,"p90":266,"p95":703},{"timestamp":"2025-08-12T02:35:00.000Z","p50":15,"p90":78,"p95":266},{"timestamp":"2025-08-12T02:40:00.000Z","p50":62,"p90":500,"p95":641},{"timestamp":"2025-08-12T02:45:00.000Z","p50":16,"p90":219,"p95":313},{"timestamp":"2025-08-12T02:50:00.000Z","p50":16,"p90":140,"p95":203},{"timestamp":"2025-08-12T02:55:00.000Z","p50":16,"p90":79,"p95":141},{"timestamp":"2025-08-12T03:00:00.000Z","p50":62,"p90":484,"p95":625},{"timestamp":"2025-08-12T03:05:00.000Z","p50":16,"p90":188,"p95":328},{"timestamp":"2025-08-12T03:10:00.000Z","p50":47,"p90":594,"p95":1015},{"timestamp":"2025-08-12T03:15:00.000Z","p50":16,"p90":609,"p95":750},{"timestamp":"2025-08-12T03:20:00.000Z","p50":31,"p90":265,"p95":860},{"timestamp":"2025-08-12T03:25:00.000Z","p50":31,"p90":406,"p95":437},{"timestamp":"2025-08-12T03:30:00.000Z","p50":16,"p90":234,"p95":328},{"timestamp":"2025-08-12T03:35:00.000Z","p50":16,"p90":140,"p95":266},{"timestamp":"2025-08-12T03:40:00.000Z","p50":15,"p90":63,"p95":172},{"timestamp":"2025-08-12T03:45:00.000Z","p50":16,"p90":203,"p95":343},{"timestamp":"2025-08-12T03:50:00.000Z","p50":63,"p90":360,"p95":468},{"timestamp":"2025-08-12T03:55:00.000Z","p50":16,"p90":63,"p95":219},{"timestamp":"2025-08-12T04:00:00.000Z","p50":16,"p90":218,"p95":297},{"timestamp":"2025-08-12T04:05:00.000Z","p50":16,"p90":110,"p95":297},{"timestamp":"2025-08-12T04:10:00.000Z","p50":16,"p90":47,"p95":187},{"timestamp":"2025-08-12T04:15:00.000Z","p50":16,"p90":141,"p95":235},{"timestamp":"2025-08-12T04:20:00.000Z","p50":16,"p90":203,"p95":1188},{"timestamp":"2025-08-12T04:25:00.000Z","p50":47,"p90":406,"p95":563},{"timestamp":"2025-08-12T04:30:00.000Z","p50":16,"p90":313,"p95":422},{"timestamp":"2025-08-12T04:35:00.000Z","p50":203,"p90":562,"p95":1219},{"timestamp":"2025-08-12T04:40:00.000Z","p50":31,"p90":297,"p95":422},{"timestamp":"2025-08-12T04:45:00.000Z","p50":94,"p90":437,"p95":532},{"timestamp":"2025-08-12T04:50:00.000Z","p50":16,"p90":282,"p95":406},{"timestamp":"2025-08-12T04:55:00.000Z","p50":16,"p90":32,"p95":62},{"timestamp":"2025-08-12T05:00:00.000Z","p50":63,"p90":453,"p95":687},{"timestamp":"2025-08-12T05:05:00.000Z","p50":16,"p90":203,"p95":234},{"timestamp":"2025-08-12T05:10:00.000Z","p50":16,"p90":312,"p95":391},{"timestamp":"2025-08-12T05:15:00.000Z","p50":47,"p90":406,"p95":438},{"timestamp":"2025-08-12T05:20:00.000Z","p50":16,"p90":32,"p95":188},{"timestamp":"2025-08-12T05:25:00.000Z","p50":16,"p90":93,"p95":125},{"timestamp":"2025-08-12T05:30:00.000Z","p50":250,"p90":641,"p95":703},{"timestamp":"2025-08-12T05:35:00.000Z","p50":109,"p90":609,"p95":765},{"timestamp":"2025-08-12T05:40:00.000Z","p50":16,"p90":141,"p95":266},{"timestamp":"2025-08-12T05:45:00.000Z","p50":94,"p90":344,"p95":453},{"timestamp":"2025-08-12T05:50:00.000Z","p50":31,"p90":375,"p95":547},{"timestamp":"2025-08-12T05:55:00.000Z","p50":16,"p90":328,"p95":843},{"timestamp":"2025-08-12T06:00:00.000Z","p50":47,"p90":500,"p95":531},{"timestamp":"2025-08-12T06:05:00.000Z","p50":16,"p90":156,"p95":297},{"timestamp":"2025-08-12T06:10:00.000Z","p50":110,"p90":562,"p95":828},{"timestamp":"2025-08-12T06:15:00.000Z","p50":235,"p90":734,"p95":1484},{"timestamp":"2025-08-12T06:20:00.000Z","p50":16,"p90":204,"p95":281},{"timestamp":"2025-08-12T06:25:00.000Z","p50":16,"p90":109,"p95":219},{"timestamp":"2025-08-12T06:30:00.000Z","p50":16,"p90":328,"p95":750},{"timestamp":"2025-08-12T06:35:00.000Z","p50":156,"p90":515,"p95":625},{"timestamp":"2025-08-12T06:40:00.000Z","p50":16,"p90":125,"p95":360},{"timestamp":"2025-08-12T06:45:00.000Z","p50":16,"p90":140,"p95":282},{"timestamp":"2025-08-12T06:50:00.000Z","p50":16,"p90":141,"p95":344},{"timestamp":"2025-08-12T06:55:00.000Z","p50":16,"p90":140,"p95":218},{"timestamp":"2025-08-12T07:00:00.000Z","p50":140,"p90":703,"p95":812},{"timestamp":"2025-08-12T07:05:00.000Z","p50":16,"p90":281,"p95":468},{"timestamp":"2025-08-12T07:10:00.000Z","p50":16,"p90":62,"p95":140},{"timestamp":"2025-08-12T07:15:00.000Z","p50":16,"p90":250,"p95":328},{"timestamp":"2025-08-12T07:20:00.000Z","p50":15,"p90":156,"p95":265},{"timestamp":"2025-08-12T07:25:00.000Z","p50":16,"p90":32,"p95":250},{"timestamp":"2025-08-12T07:30:00.000Z","p50":16,"p90":203,"p95":344},{"timestamp":"2025-08-12T07:35:00.000Z","p50":16,"p90":359,"p95":594},{"timestamp":"2025-08-12T07:40:00.000Z","p50":125,"p90":469,"p95":859},{"timestamp":"2025-08-12T07:45:00.000Z","p50":15,"p90":63,"p95":297},{"timestamp":"2025-08-12T07:50:00.000Z","p50":62,"p90":484,"p95":890},{"timestamp":"2025-08-12T07:55:00.000Z","p50":16,"p90":297,"p95":375},{"timestamp":"2025-08-12T08:00:00.000Z","p50":16,"p90":31,"p95":78},{"timestamp":"2025-08-12T08:05:00.000Z","p50":16,"p90":282,"p95":391},{"timestamp":"2025-08-12T08:10:00.000Z","p50":141,"p90":688,"p95":1094},{"timestamp":"2025-08-12T08:15:00.000Z","p50":16,"p90":156,"p95":234},{"timestamp":"2025-08-12T08:20:00.000Z","p50":16,"p90":204,"p95":406},{"timestamp":"2025-08-12T08:25:00.000Z","p50":109,"p90":375,"p95":625},{"timestamp":"2025-08-12T08:30:00.000Z","p50":16,"p90":187,"p95":391},{"timestamp":"2025-08-12T08:35:00.000Z","p50":16,"p90":156,"p95":219},{"timestamp":"2025-08-12T08:40:00.000Z","p50":16,"p90":94,"p95":1250},{"timestamp":"2025-08-12T08:45:00.000Z","p50":16,"p90":281,"p95":625},{"timestamp":"2025-08-12T08:50:00.000Z","p50":31,"p90":312,"p95":453},{"timestamp":"2025-08-12T08:55:00.000Z","p50":16,"p90":141,"p95":1484},{"timestamp":"2025-08-12T09:00:00.000Z","p50":78,"p90":531,"p95":625},{"timestamp":"2025-08-12T09:05:00.000Z","p50":16,"p90":157,"p95":219},{"timestamp":"2025-08-12T09:10:00.000Z","p50":16,"p90":47,"p95":172},{"timestamp":"2025-08-12T09:15:00.000Z","p50":16,"p90":250,"p95":297},{"timestamp":"2025-08-12T09:20:00.000Z","p50":63,"p90":500,"p95":625},{"timestamp":"2025-08-12T09:25:00.000Z","p50":62,"p90":390,"p95":500},{"timestamp":"2025-08-12T09:30:00.000Z","p50":16,"p90":844,"p95":1235},{"timestamp":"2025-08-12T09:35:00.000Z","p50":31,"p90":360,"p95":422},{"timestamp":"2025-08-12T09:40:00.000Z","p50":172,"p90":641,"p95":859},{"timestamp":"2025-08-12T09:45:00.000Z","p50":125,"p90":515,"p95":688},{"timestamp":"2025-08-12T09:50:00.000Z","p50":16,"p90":344,"p95":391},{"timestamp":"2025-08-12T09:55:00.000Z","p50":15,"p90":172,"p95":313},{"timestamp":"2025-08-12T10:00:00.000Z","p50":16,"p90":235,"p95":391},{"timestamp":"2025-08-12T10:05:00.000Z","p50":125,"p90":703,"p95":812},{"timestamp":"2025-08-12T10:10:00.000Z","p50":78,"p90":422,"p95":500},{"timestamp":"2025-08-12T10:15:00.000Z","p50":219,"p90":515,"p95":578},{"timestamp":"2025-08-12T10:20:00.000Z","p50":16,"p90":94,"p95":234}];
+
+        // Chart configuration
+        function getChartConfig() {
+            const isLight = document.body.getAttribute('data-theme') === 'light';
+            const gridColor = isLight ? '#e2e8f0' : '#475569';
+            const textColor = isLight ? '#1e293b' : '#f8fafc';
+            
+            return {
+                displayModeBar: false,
+                responsive: true,
+                paper_bgcolor: 'transparent',
+                plot_bgcolor: 'transparent',
+                font: {
+                    family: 'Poppins, sans-serif',
+                    color: textColor
+                },
+                margin: { t: 20, r: 20, b: 60, l: 60 }
+            };
+        }
+
+        function initializeCharts() {
+            const chartConfig = getChartConfig();
+            const isLight = document.body.getAttribute('data-theme') === 'light';
+            const gridColor = isLight ? '#e2e8f0' : '#475569';
+
+            // Availability Chart
+            if (availabilityData && availabilityData.length > 0) {
+                const appAvailabilityTrace = {
+                    x: availabilityData.map(d => d.timestamp),
+                    y: availabilityData.map(d => d.appAvailability),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    line: { color: '#10b981', width: 3 },
+                    marker: { size: 6, color: '#10b981' },
+                    name: 'App Availability',
+                    hovertemplate: '%{y:.2f}%<extra></extra>'
+                };
+
+                const platformAvailabilityTrace = {
+                    x: availabilityData.map(d => d.timestamp),
+                    y: availabilityData.map(d => d.platformAvailability),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    line: { color: '#3b82f6', width: 3 },
+                    marker: { size: 6, color: '#3b82f6' },
+                    name: 'Platform Availability',
+                    hovertemplate: '%{y:.2f}%<extra></extra>'
+                };
+
+                Plotly.newPlot('availabilityChart', [appAvailabilityTrace, platformAvailabilityTrace], {
+                    ...chartConfig,
+                    xaxis: { title: 'Time (UTC)', gridcolor: gridColor },
+                    yaxis: { 
+                        title: 'Availability (%)', 
+                        gridcolor: gridColor,
+                        range: [0, 100]  // Force Y-axis to 0-100 range
+                    }
+                });
+            }
+
+            // Requests Chart - Grouped bar chart showing successful and failed requests
+            if (requestsData && requestsData.length > 0) {
+                const successRequests = requestsData.map(d => d.successful);
+                const errorRequests = requestsData.map(d => d.errors);
+
+                const successTrace = {
+                    x: requestsData.map(d => d.timestamp),
+                    y: successRequests,
+                    type: 'bar',
+                    name: 'Total Requests',
+                    marker: { color: '#10b981' },
+                    hovertemplate: '%{y}<extra></extra>'
+                };
+
+                const errorTrace = {
+                    x: requestsData.map(d => d.timestamp),
+                    y: errorRequests,
+                    type: 'bar',
+                    name: 'Failed Requests',
+                    marker: { color: '#ef4444' },
+                    hovertemplate: '%{y}<extra></extra>'
+                };
+
+                Plotly.newPlot('requestsChart', [successTrace, errorTrace], {
+                    ...chartConfig,
+                    xaxis: { title: 'Time (UTC)', gridcolor: gridColor },
+                    yaxis: { title: 'Request Count', gridcolor: gridColor },
+                    barmode: 'group'
+                });
+            }
+
+            // Latency Chart - Show percentiles
+            if (latencyData && latencyData.length > 0) {
+                const p50Trace = {
+                    x: latencyData.map(d => d.timestamp),
+                    y: latencyData.map(d => d.p50),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    line: { color: '#10b981', width: 2 },
+                    marker: { size: 4, color: '#10b981' },
+                    name: '50th Percentile',
+                    hovertemplate: '%{y:.0f}ms<extra></extra>'
+                };
+
+                const p90Trace = {
+                    x: latencyData.map(d => d.timestamp),
+                    y: latencyData.map(d => d.p90),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    line: { color: '#f59e0b', width: 2 },
+                    marker: { size: 4, color: '#f59e0b' },
+                    name: '90th Percentile',
+                    hovertemplate: '%{y:.0f}ms<extra></extra>'
+                };
+
+                const p95Trace = {
+                    x: latencyData.map(d => d.timestamp),
+                    y: latencyData.map(d => d.p95),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    line: { color: '#ef4444', width: 2 },
+                    marker: { size: 4, color: '#ef4444' },
+                    name: '95th Percentile',
+                    hovertemplate: '%{y:.0f}ms<extra></extra>'
+                };
+
+                Plotly.newPlot('latencyChart', [p50Trace, p90Trace, p95Trace], {
+                    ...chartConfig,
+                    xaxis: { title: 'Time (UTC)', gridcolor: gridColor },
+                    yaxis: { title: 'Latency (ms)', gridcolor: gridColor }
+                });
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            setTimeout(initializeCharts, 100);
+        });
+    </script>
+</body>
+</html>

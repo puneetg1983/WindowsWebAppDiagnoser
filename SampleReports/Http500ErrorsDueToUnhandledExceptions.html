@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web App Analysis Report - broken-http500-puneetg1983</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Dark theme (default) */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #475569;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+        }
+
+        [data-theme="light"] {
+            /* Light theme */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #0891b2;
+            --accent-purple: #7c3aed;
+            --accent-green: #059669;
+            --accent-orange: #d97706;
+            --accent-red: #dc2626;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --info: #2563eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .header-left h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.125rem;
+            margin-bottom: 20px;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid var(--error);
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.875rem;
+        }
+
+        .status-indicator::before {
+            content: '⚠️';
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        .status-indicator.critical::before { content: '🚨'; }
+        .status-indicator.warning::before { content: '⚠️'; }
+        .status-indicator.healthy::before { content: '✅'; }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .analysis-period-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 10px;
+        }
+
+        .analysis-period-info .label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .analysis-period-info .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: white;
+            line-height: 1.4;
+        }
+
+        .tool-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            display: flex;
+            gap: 16px;
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .tool-info-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tool-info-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+        }
+
+        .tool-info-value {
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+        }
+
+        .github-feedback-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .github-feedback-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+            color: white;
+        }
+
+        .github-feedback-btn::before {
+            content: '💬';
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .section {
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-left: 12px;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .section-icon.metrics { background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); }
+        .section-icon.observations { background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan)); }
+        .section-icon.recommendations { background: linear-gradient(135deg, var(--accent-orange), var(--accent-red)); }
+        .section-icon.exceptions { background: linear-gradient(135deg, var(--accent-red), var(--accent-purple)); }
+        .section-icon.charts { background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); }
+        .section-icon.urls { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); }
+
+        .metrics-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .metric-tile {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .metric-tile:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .metric-tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        .metric-tile.critical::before {
+            background: linear-gradient(90deg, var(--error), #dc2626);
+        }
+
+        .metric-tile.warning::before {
+            background: linear-gradient(90deg, var(--warning), #d97706);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .metric-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .metric-value.critical {
+            color: var(--error);
+        }
+
+        .metric-value.warning {
+            color: var(--warning);
+        }
+
+        .insights-list {
+            list-style: none;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent-cyan);
+            transition: background-color 0.3s ease;
+        }
+
+        .insight-item::before {
+            content: '📈';
+            margin-right: 16px;
+            font-size: 1.5rem;
+            margin-top: 2px;
+        }
+
+        .recommendations-list .insight-item {
+            border-left-color: var(--accent-orange);
+        }
+
+        .recommendations-list .insight-item::before {
+            content: '💡';
+        }
+
+        .chart-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 24px;
+        }
+
+        .chart-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart {
+            height: 300px;
+            border-radius: 8px;
+        }
+
+        /* Exception Analysis Styles */
+        .exceptions-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .exception-summary {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+            border: 1px solid var(--error);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .exception-summary h3 {
+            color: var(--error);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .exception-summary p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .exceptions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .exception-card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .exception-card:hover {
+            border-color: var(--error);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15);
+        }
+
+        .exception-header {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--error);
+        }
+
+        .exception-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .exception-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .copy-exception-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-exception-btn:hover {
+            background: var(--accent-cyan);
+            transform: translateY(-1px);
+        }
+
+        .copy-exception-btn::before {
+            content: '📋';
+        }
+
+        .copy-success {
+            background: var(--success) !important;
+        }
+
+        .copy-success::before {
+            content: '✅';
+        }
+
+        .exception-type {
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--error);
+        }
+
+        .exception-count-badge {
+            background: linear-gradient(135deg, var(--error), #dc2626);
+            border: 1px solid var(--error);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .exception-count-badge::before {
+            content: '🚨';
+        }
+
+        .exception-content {
+            padding: 20px;
+        }
+
+        .exception-message {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--error);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .exception-inner {
+            background: rgba(251, 146, 60, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .exception-details {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Stack trace gets 2/3, URLs get 1/3 */
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .detail-section {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .detail-section h4 {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-section h4::before {
+            content: '📍';
+            font-size: 1rem;
+        }
+
+        .detail-section h4.stack::before { content: '🔍'; }
+        .detail-section h4.urls::before { content: '🔗'; }
+
+        .stack-trace {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 6px;
+            max-width: 800px;      /* Keep horizontal constraint for readability */
+            overflow-x: auto;      /* Only horizontal scrollbar when needed */
+            white-space: pre;      /* Preserve line breaks but prevent wrapping */
+            border: 1px solid var(--border-color);
+            /* Enhanced scrollbar styling */
+            scrollbar-width: auto;
+            scrollbar-color: var(--error) rgba(255, 255, 255, 0.3);
+        }
+
+        /* Webkit scrollbar styling for better visibility */
+        .stack-trace::-webkit-scrollbar {
+            height: 12px;
+            width: 12px;
+        }
+
+        .stack-trace::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 6px;
+        }
+
+        .stack-trace::-webkit-scrollbar-thumb {
+            background: var(--error);
+            border-radius: 6px;
+            border: 2px solid rgba(0, 0, 0, 0.4);
+        }
+
+        .stack-trace::-webkit-scrollbar-thumb:hover {
+            background: rgba(239, 68, 68, 0.8);
+        }
+
+        .stack-trace::-webkit-scrollbar-corner {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .urls-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .url-item {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            word-break: break-all;
+        }
+
+        .url-item:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .timestamp-info {
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(100, 116, 139, 0.1);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .show-more-toggle {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-top: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .show-more-toggle:hover {
+            background: var(--accent-cyan);
+            transform: translateY(-1px);
+        }
+
+        /* Startup Exception Analysis Styles */
+        .startup-exceptions-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .startup-exception-summary {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.08));
+            border: 2px solid var(--error);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .startup-exception-summary h3 {
+            color: var(--error);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .startup-exception-summary p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .startup-exceptions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .startup-exception-card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 2px solid var(--error);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .startup-exception-card:hover {
+            border-color: var(--error);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.2);
+        }
+
+        .startup-exception-header {
+            background: linear-gradient(135deg, var(--error), #dc2626);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--error);
+        }
+
+        .startup-exception-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .startup-exception-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .startup-exception-type {
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: white;
+        }
+
+        .startup-exception-count-badge {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .startup-exception-count-badge::before {
+            content: '🔥';
+        }
+
+        .copy-startup-exception-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-startup-exception-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .copy-startup-exception-btn::before {
+            content: '📋';
+        }
+
+        .startup-exception-content {
+            padding: 20px;
+        }
+
+        .startup-exception-message {
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 4px solid var(--error);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .startup-exception-inner {
+            background: rgba(251, 146, 60, 0.15);
+            border-left: 4px solid var(--warning);
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .startup-exception-details {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .startup-detail-section {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .startup-detail-section h4 {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .startup-detail-section h4.stack::before { content: '🔍'; }
+        .startup-detail-section h4.module::before { content: '⚙️'; }
+
+        .module-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .module-info-item {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            word-break: break-all;
+        }
+
+        .module-info-item:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .startup-timestamp-info {
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Failed URLs container */
+        .failed-urls-container {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .failed-urls-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .failed-urls-table th,
+        .failed-urls-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .failed-urls-table th {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .metrics-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .exception-details {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .exception-header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .exception-header-left,
+            .exception-header-right {
+                flex-direction: column;
+                gap: 8px;
+                align-items: center;
+            }
+
+            .exception-type {
+                font-size: 1rem;
+            }
+
+            .stack-trace {
+                font-size: 0.75rem;
+                max-height: 150px;
+            }
+
+            .startup-exception-details {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .startup-exception-header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .startup-exception-header-left,
+            .startup-exception-header-right {
+                flex-direction: column;
+                gap: 8px;
+                align-items: center;
+            }
+
+            .startup-exception-type {
+                font-size: 1.1rem;
+            }
+
+            .startup-exception-summary h3 {
+                font-size: 1.3rem;
+            }
+
+            .startup-exception-summary p {
+                font-size: 1rem;
+            }
+
+            .tool-info {
+                flex-direction: column;
+                gap: 8px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>Azure Web App Diagnostics</h1>
+                    <p class="header-subtitle">Comprehensive analysis report for broken-http500-puneetg1983</p>
+                    <div class="status-indicator critical">critical Issues Detected</div>
+                    
+                    <div class="analysis-period-info">
+                        <div class="label">Analysis Period:</div>
+                        <div class="value">Aug 11, 2025 20:35 UTC - Aug 12, 2025 20:35 UTC (1.0 days)</div>
+                    </div>
+                    
+                    <div class="tool-info">
+                        <div class="tool-info-item">
+                            <span class="tool-info-label">Version:</span>
+                            <span class="tool-info-value">2.4-8+406556796565252b4497ffc91f6ec275511e8497</span>
+                        </div>
+                        <div class="tool-info-item">
+                            <span class="tool-info-label">Runtime:</span>
+                            <span class="tool-info-value">898.9s</span>
+                        </div>
+                        <div class="tool-info-item">
+                            <a href="https://github.com/puneetg1983/WindowsWebAppDiagnoser" target="_blank" class="github-feedback-btn">
+                                Issues/Feedback
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <span id="theme-icon">🌙</span>
+                        <span id="theme-text">Light Mode</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon metrics">📊</div>
+                    <h2>Performance Metrics</h2>
+                </div>
+                
+                <div class="metrics-dashboard">
+                    <div class="metric-tile critical">
+                        <div class="metric-header">
+                            <span class="metric-label">Overall Health</span>
+                            <div class="metric-icon">⚡</div>
+                        </div>
+                        <div class="metric-value critical">critical</div>
+                    </div>
+                    
+                    <div class="metric-tile">
+                        <div class="metric-header">
+                            <span class="metric-label">Availability Score</span>
+                            <div class="metric-icon">📈</div>
+                        </div>
+                        <div class="metric-value">69.29%</div>
+                    </div>
+                    
+                    <div class="metric-tile critical">
+                        <div class="metric-header">
+                            <span class="metric-label">Failed Requests</span>
+                            <div class="metric-icon">❌</div>
+                        </div>
+                        <div class="metric-value critical">14,455</div>
+                    </div>
+                    
+                    <div class="metric-tile">
+                        <div class="metric-header">
+                            <span class="metric-label">Total Requests</span>
+                            <div class="metric-icon">📊</div>
+                        </div>
+                        <div class="metric-value">18,788</div>
+                    </div>
+                    
+                    <div class="metric-tile">
+                        <div class="metric-header">
+                            <span class="metric-label">Successful Requests</span>
+                            <div class="metric-icon">✅</div>
+                        </div>
+                        <div class="metric-value">4,333</div>
+                    </div>
+                    
+                    <div class="metric-tile">
+                        <div class="metric-header">
+                            <span class="metric-label">Exception Types</span>
+                            <div class="metric-icon">🐛</div>
+                        </div>
+                        <div class="metric-value">6</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon observations">🔍</div>
+                    <h2>Key Insights</h2>
+                </div>
+                
+                <div class="insights-list">
+                    <ul class="observations-list">
+<li>Average availability is 69.29% over 24.00 hours (based on 18788 total requests)</li>
+<li>Successful requests: 13019 (2xx + 3xx + 4xx), Server errors (5xx): 5769</li>
+<li>Total request failures detected: 5769</li>
+<li>HTTP 500: 5769 occurrences (100.00% of total failures)</li>
+<li>HTTP 500.0 errors detected (5729 occurrences) - indicates unhandled exceptions in application code</li>
+<li>Top failing module: ManagedPipelineHandler with 5680 failures and module category identified as: AspNetFramework</li>
+<li>EXCEPTIONS FOUND: 6 unique exception types, 3182 total instances (EventLog, ApplicationInsights)</li>
+<li>Root cause category: Application Code Error</li>
+</ul>
+
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon recommendations">💡</div>
+                    <h2>Actionable Recommendations</h2>
+                </div>
+                
+                <div class="insights-list recommendations-list">
+                    <ul class="recommendations-list">
+<li>Review the consolidated exception details to identify root causes and improve application stability</li>
+</ul>
+
+                </div>
+            </div>
+
+            <div class="section">
+    <div class="section-header">
+        <div class="section-icon exceptions">⚠️</div>
+        <h2>Exception Analysis</h2>
+    </div>
+    <div class="exceptions-container">
+    <div class="exception-summary">
+        <h3>Total Exceptions Found: 6</h3>
+        <p>Critical issues requiring immediate attention</p>
+    </div>
+    <div class="exceptions-grid">
+        <div class="exception-card">
+            <div class="exception-header">
+                <div class="exception-header-left">
+                    <div class="exception-type">System.NullReferenceException</div>
+                </div>
+                <div class="exception-header-right">
+                    <div class="exception-count-badge">1,442 occurrences</div>
+                    <button class="copy-exception-btn" onclick="copyExceptionToClipboard(this)">Copy</button>
+                </div>
+            </div>
+            <div class="exception-content">
+<div class="exception-message">Exception of type &#39;System.Web.HttpUnhandledException&#39; was thrown.</div>
+<div class="exception-inner"><strong>Inner Exception:</strong> Object reference not set to an instance of an object.</div>
+<div class="exception-details">
+<div class="detail-section">
+<h4 class="stack">Stack Trace</h4>
+<div class="stack-trace">   at System.Web.UI.Page.HandleError
+   at System.Web.UI.Page.ProcessRequestMain
+   at System.Web.UI.Page.ProcessRequest
+   at System.Web.UI.Page.ProcessRequest
+   at System.Web.UI.Page.ProcessRequestWithNoAssert
+   at System.Web.UI.Page.ProcessRequest
+   at ASP.scenarios_http500_http500_2actual_aspx.ProcessRequest
+   at System.Web.HttpApplication+CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute
+   at System.Web.HttpApplication+&lt;&gt;c__DisplayClass285_0.&lt;ExecuteStepImpl&gt;b__0
+   at System.Web.HttpApplication+StepInvoker.Invoke
+   at System.Web.HttpApplication+StepInvoker+&lt;&gt;c__DisplayClass4_0.&lt;Invoke&gt;b__0
+   at Microsoft.AspNet.TelemetryCorrelation.TelemetryCorrelationHttpModule.OnExecuteRequestStep
+   at System.Web.HttpApplication+&lt;&gt;c__DisplayClass284_0.&lt;OnExecuteRequestStep&gt;b__0
+   at System.Web.HttpApplication+StepInvoker.Invoke
+   at System.Web.HttpApplication+StepInvoker+&lt;&gt;c__DisplayClass4_0.&lt;Invoke&gt;b__0
+   at Microsoft.ApplicationInsights.Web.ApplicationInsightsHttpModule.OnExecuteRequestStep
+   at System.Web.HttpApplication+&lt;&gt;c__DisplayClass284_0.&lt;OnExecuteRequestStep&gt;b__0
+   at System.Web.HttpApplication+StepInvoker.Invoke
+   at System.Web.HttpApplication.ExecuteStepImpl
+   at System.Web.HttpApplication.ExecuteStep</div>
+</div>
+<div class="detail-section">
+<h4 class="urls">Affected URLs</h4>
+<div class="urls-list">
+<div class="url-item">https://broken-http500-puneetg1983.azurewebsites.net/Scenarios/Http500/Http500_2Actual.aspx</div>
+</div>
+</div>
+</div>
+<div class="timestamp-info">
+<strong>Last Occurrence:</strong> 2025-08-12 13:48:12 UTC | <strong>Data Source:</strong> ApplicationInsights
+</div>
+</div>
+</div>
+        <div class="exception-card">
+            <div class="exception-header">
+                <div class="exception-header-left">
+                    <div class="exception-type">System.ComponentModel.Win32Exception</div>
+                </div>
+                <div class="exception-header-right">
+                    <div class="exception-count-badge">1,424 occurrences</div>
+                    <button class="copy-exception-btn" onclick="copyExceptionToClipboard(this)">Copy</button>
+                </div>
+            </div>
+            <div class="exception-content">
+<div class="exception-message">Exception of type &#39;System.Web.HttpUnhandledException&#39; was thrown.</div>
+<div class="exception-inner"><strong>Inner Exception:</strong> Access is denied</div>
+<div class="exception-details">
+<div class="detail-section">
+<h4 class="stack">Stack Trace</h4>
+<div class="stack-trace">   at System.Web.UI.Page.HandleError
+   at System.Web.UI.Page.ProcessRequestMain
+   at System.Web.UI.Page.ProcessRequest
+   at System.Web.UI.Page.ProcessRequest
+   at System.Web.UI.Page.ProcessRequestWithNoAssert
+   at System.Web.UI.Page.ProcessRequest
+   at ASP.scenarios_http500_http500_4actual_aspx.ProcessRequest
+   at System.Web.HttpApplication+CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute
+   at System.Web.HttpApplication+&lt;&gt;c__DisplayClass285_0.&lt;ExecuteStepImpl&gt;b__0
+   at System.Web.HttpApplication+StepInvoker.Invoke
+   at System.Web.HttpApplication+StepInvoker+&lt;&gt;c__DisplayClass4_0.&lt;Invoke&gt;b__0
+   at Microsoft.AspNet.TelemetryCorrelation.TelemetryCorrelationHttpModule.OnExecuteRequestStep
+   at System.Web.HttpApplication+&lt;&gt;c__DisplayClass284_0.&lt;OnExecuteRequestStep&gt;b__0
+   at System.Web.HttpApplication+StepInvoker.Invoke
+   at System.Web.HttpApplication+StepInvoker+&lt;&gt;c__DisplayClass4_0.&lt;Invoke&gt;b__0
+   at Microsoft.ApplicationInsights.Web.ApplicationInsightsHttpModule.OnExecuteRequestStep
+   at System.Web.HttpApplication+&lt;&gt;c__DisplayClass284_0.&lt;OnExecuteRequestStep&gt;b__0
+   at System.Web.HttpApplication+StepInvoker.Invoke
+   at System.Web.HttpApplication.ExecuteStepImpl
+   at System.Web.HttpApplication.ExecuteStep</div>
+</div>
+<div class="detail-section">
+<h4 class="urls">Affected URLs</h4>
+<div class="urls-list">
+<div class="url-item">https://broken-http500-puneetg1983.azurewebsites.net/Scenarios/Http500/Http500_4Actual.aspx</div>
+</div>
+</div>
+</div>
+<div class="timestamp-info">
+<strong>Last Occurrence:</strong> 2025-08-12 13:47:42 UTC | <strong>Data Source:</strong> ApplicationInsights
+</div>
+</div>
+</div>
+        <div class="exception-card">
+            <div class="exception-header">
+                <div class="exception-header-left">
+                    <div class="exception-type">NullReferenceException</div>
+                </div>
+                <div class="exception-header-right">
+                    <div class="exception-count-badge">155 occurrences</div>
+                    <button class="copy-exception-btn" onclick="copyExceptionToClipboard(this)">Copy</button>
+                </div>
+            </div>
+            <div class="exception-content">
+<div class="exception-message">Object reference not set to an instance of an object.</div>
+<div class="exception-details">
+<div class="detail-section">
+<h4 class="stack">Stack Trace</h4>
+<div class="stack-trace">   at DiagnosticScenarios.Web.Scenarios.Http500.Http500_2Actual.Page_Load(Object sender, EventArgs e)
+   at System.Web.Util.CalliEventHandlerDelegateProxy.Callback(Object sender, EventArgs e)
+   at System.Web.UI.Control.OnLoad(EventArgs e)
+   at System.Web.UI.Control.LoadRecursive()
+   at System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)</div>
+</div>
+<div class="detail-section">
+<h4 class="urls">Affected URLs</h4>
+<div class="urls-list">
+<div class="url-item">https://broken-http500-puneetg1983.azurewebsites.net:443/Scenarios/Http500/Http500_2Actual.aspx</div>
+</div>
+</div>
+</div>
+<div class="timestamp-info">
+<strong>Last Occurrence:</strong> 2025-08-12 20:49:15 UTC | <strong>Data Source:</strong> EventLog
+</div>
+</div>
+</div>
+        <div class="exception-card">
+            <div class="exception-header">
+                <div class="exception-header-left">
+                    <div class="exception-type">SqlException</div>
+                </div>
+                <div class="exception-header-right">
+                    <div class="exception-count-badge">143 occurrences</div>
+                    <button class="copy-exception-btn" onclick="copyExceptionToClipboard(this)">Copy</button>
+                </div>
+            </div>
+            <div class="exception-content">
+<div class="exception-message">A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server)</div>
+<div class="exception-details">
+<div class="detail-section">
+<h4 class="stack">Stack Trace</h4>
+<div class="stack-trace">   at System.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, DbConnectionPool pool, String accessToken, Boolean applyTransientFaultHandling, SqlAuthenticationProviderManager sqlAuthProviderManager)
+   at System.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at System.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at System.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal&amp; connection)
+   at System.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal&amp; connection)
+   at System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal&amp; connection)
+   at System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.SqlClient.SqlConnection.TryOpenInner(TaskCompletionSource`1 retry)
+   at System.Data.SqlClient.SqlConnection.TryOpen(TaskCompletionSource`1 retry)
+   at System.Data.SqlClient.SqlConnection.Open()
+   at DiagnosticScenarios.Web.Scenarios.Http500.Http500_4Actual.Page_Load(Object sender, EventArgs e)
+   at System.Web.Util.CalliEventHandlerDelegateProxy.Callback(Object sender, EventArgs e)
+   at System.Web.UI.Control.OnLoad(EventArgs e)
+   at System.Web.UI.Control.LoadRecursive()
+   at System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)</div>
+</div>
+<div class="detail-section">
+<h4 class="urls">Affected URLs</h4>
+<div class="urls-list">
+<div class="url-item">https://broken-http500-puneetg1983.azurewebsites.net:443/Scenarios/Http500/Http500_4Actual.aspx</div>
+</div>
+</div>
+</div>
+<div class="timestamp-info">
+<strong>Last Occurrence:</strong> 2025-08-12 20:45:33 UTC | <strong>Data Source:</strong> EventLog
+</div>
+</div>
+</div>
+        <div class="exception-card">
+            <div class="exception-header">
+                <div class="exception-header-left">
+                    <div class="exception-type">System.InvalidOperationException</div>
+                </div>
+                <div class="exception-header-right">
+                    <div class="exception-count-badge">14 occurrences</div>
+                    <button class="copy-exception-btn" onclick="copyExceptionToClipboard(this)">Copy</button>
+                </div>
+            </div>
+            <div class="exception-content">
+<div class="exception-message">Exception of type &#39;System.Web.HttpUnhandledException&#39; was thrown.</div>
+<div class="exception-inner"><strong>Inner Exception:</strong> Timeout expired.  The timeout period elapsed prior to obtaining a connection from the pool.  This may have occurred because all pooled connections were in use and max pool size was reached.</div>
+<div class="exception-details">
+<div class="detail-section">
+<h4 class="stack">Stack Trace</h4>
+<div class="stack-trace">   at System.Web.UI.Page.HandleError
+   at System.Web.UI.Page.ProcessRequestMain
+   at System.Web.UI.Page.ProcessRequest
+   at System.Web.UI.Page.ProcessRequest
+   at System.Web.UI.Page.ProcessRequestWithNoAssert
+   at System.Web.UI.Page.ProcessRequest
+   at ASP.scenarios_http500_http500_4actual_aspx.ProcessRequest
+   at System.Web.HttpApplication+CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute
+   at System.Web.HttpApplication+&lt;&gt;c__DisplayClass285_0.&lt;ExecuteStepImpl&gt;b__0
+   at System.Web.HttpApplication+StepInvoker.Invoke
+   at System.Web.HttpApplication+StepInvoker+&lt;&gt;c__DisplayClass4_0.&lt;Invoke&gt;b__0
+   at Microsoft.AspNet.TelemetryCorrelation.TelemetryCorrelationHttpModule.OnExecuteRequestStep
+   at System.Web.HttpApplication+&lt;&gt;c__DisplayClass284_0.&lt;OnExecuteRequestStep&gt;b__0
+   at System.Web.HttpApplication+StepInvoker.Invoke
+   at System.Web.HttpApplication+StepInvoker+&lt;&gt;c__DisplayClass4_0.&lt;Invoke&gt;b__0
+   at Microsoft.ApplicationInsights.Web.ApplicationInsightsHttpModule.OnExecuteRequestStep
+   at System.Web.HttpApplication+&lt;&gt;c__DisplayClass284_0.&lt;OnExecuteRequestStep&gt;b__0
+   at System.Web.HttpApplication+StepInvoker.Invoke
+   at System.Web.HttpApplication.ExecuteStepImpl
+   at System.Web.HttpApplication.ExecuteStep</div>
+</div>
+<div class="detail-section">
+<h4 class="urls">Affected URLs</h4>
+<div class="urls-list">
+<div class="url-item">https://broken-http500-puneetg1983.azurewebsites.net/Scenarios/Http500/Http500_4Actual.aspx</div>
+</div>
+</div>
+</div>
+<div class="timestamp-info">
+<strong>Last Occurrence:</strong> 2025-08-12 13:09:10 UTC | <strong>Data Source:</strong> ApplicationInsights
+</div>
+</div>
+</div>
+        <div class="exception-card">
+            <div class="exception-header">
+                <div class="exception-header-left">
+                    <div class="exception-type">InvalidOperationException</div>
+                </div>
+                <div class="exception-header-right">
+                    <div class="exception-count-badge">4 occurrences</div>
+                    <button class="copy-exception-btn" onclick="copyExceptionToClipboard(this)">Copy</button>
+                </div>
+            </div>
+            <div class="exception-content">
+<div class="exception-message">Timeout expired.  The timeout period elapsed prior to obtaining a connection from the pool.  This may have occurred because all pooled connections were in use and max pool size was reached.</div>
+<div class="exception-details">
+<div class="detail-section">
+<h4 class="stack">Stack Trace</h4>
+<div class="stack-trace">   at System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal&amp; connection)
+   at System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.SqlClient.SqlConnection.TryOpenInner(TaskCompletionSource`1 retry)
+   at System.Data.SqlClient.SqlConnection.TryOpen(TaskCompletionSource`1 retry)
+   at System.Data.SqlClient.SqlConnection.Open()
+   at DiagnosticScenarios.Web.Scenarios.Http500.Http500_4Actual.Page_Load(Object sender, EventArgs e)
+   at System.Web.Util.CalliEventHandlerDelegateProxy.Callback(Object sender, EventArgs e)
+   at System.Web.UI.Control.OnLoad(EventArgs e)
+   at System.Web.UI.Control.LoadRecursive()
+   at System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)</div>
+</div>
+<div class="detail-section">
+<h4 class="urls">Affected URLs</h4>
+<div class="urls-list">
+<div class="url-item">https://broken-http500-puneetg1983.azurewebsites.net:443/Scenarios/Http500/Http500_4Actual.aspx</div>
+</div>
+</div>
+</div>
+<div class="timestamp-info">
+<strong>Last Occurrence:</strong> 2025-08-12 20:09:26 UTC | <strong>Data Source:</strong> EventLog
+</div>
+</div>
+</div>
+    </div>
+    </div>
+</div>
+
+
+            
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon urls">🔗</div>
+                    <h2>Failed Request URLs</h2>
+                </div>
+                
+                <div class="failed-urls-container">
+<p><strong>Total Failed URLs:</strong> 4</p>
+<table class="failed-urls-table">
+<thead>
+<tr><th>URL</th><th>Failure Count</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="url-cell">https://broken-http500-puneetg1983.azurewebsites.net/scenarios/http500/http500_2actual.aspx</td>
+<td>1443</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-http500-puneetg1983.azurewebsites.net/scenarios/http500/http500_3actual.aspx</td>
+<td>1441</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-http500-puneetg1983.azurewebsites.net/scenarios/http500/http500_1actual.aspx</td>
+<td>1441</td>
+</tr>
+<tr>
+<td class="url-cell">https://broken-http500-puneetg1983.azurewebsites.net/scenarios/http500/http500_4actual.aspx</td>
+<td>1431</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon charts">📈</div>
+                    <h2>Performance Charts</h2>
+                </div>
+                
+                <div class="chart-section">
+                    <div class="chart-container">
+                        <h3 class="chart-title">App Availability Timeline</h3>
+                        <div id="availabilityChart" class="chart"></div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3 class="chart-title">Request Volume Over Time</h3>
+                        <div id="requestsChart" class="chart"></div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3 class="chart-title">Failed Request Latency Percentiles</h3>
+                        <div id="latencyChart" class="chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Light Mode';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Dark Mode';
+                localStorage.setItem('theme', 'light');
+            }
+            
+            // Refresh charts with new theme
+            setTimeout(() => {
+                initializeCharts();
+            }, 300);
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.getElementById('theme-icon').textContent = '☀️';
+                document.getElementById('theme-text').textContent = 'Dark Mode';
+            } else {
+                document.getElementById('theme-icon').textContent = '🌙';
+                document.getElementById('theme-text').textContent = 'Light Mode';
+            }
+        }
+
+        // Copy exception to clipboard functionality
+        function copyExceptionToClipboard(button) {
+            const exceptionCard = button.closest('.exception-card');
+            
+            // Extract exception data
+            const exceptionType = exceptionCard.querySelector('.exception-type').textContent;
+            const exceptionCount = exceptionCard.querySelector('.exception-count-badge').textContent;
+            const exceptionMessage = exceptionCard.querySelector('.exception-message').textContent;
+            const stackTrace = exceptionCard.querySelector('.stack-trace')?.textContent || 'No stack trace available';
+            
+            // Extract URLs if present
+            const urlItems = exceptionCard.querySelectorAll('.url-item');
+            const urls = Array.from(urlItems).map(item => item.textContent).join('\n');
+            
+            // Extract timestamp info
+            const timestampInfo = exceptionCard.querySelector('.timestamp-info')?.textContent || '';
+            
+            // Build clipboard content
+            let clipboardContent = `Exception Type: ${exceptionType}\n`;
+            clipboardContent += `Occurrences: ${exceptionCount}\n\n`;
+            clipboardContent += `Message:\n${exceptionMessage}\n\n`;
+            
+            if (urls) {
+                clipboardContent += `Affected URLs:\n${urls}\n\n`;
+            }
+            
+            clipboardContent += `Stack Trace:\n${stackTrace}\n\n`;
+            
+            if (timestampInfo) {
+                clipboardContent += `Timing Information:\n${timestampInfo}`;
+            }
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(clipboardContent).then(() => {
+                // Show success feedback
+                const originalText = button.textContent;
+                const originalClass = button.className;
+                
+                button.textContent = 'Copied!';
+                button.classList.add('copy-success');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.className = originalClass;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy to clipboard. Please try again.');
+            });
+        }
+
+        // Copy startup exception to clipboard functionality
+        function copyStartupExceptionToClipboard(button) {
+            const startupExceptionCard = button.closest('.startup-exception-card');
+            
+            // Extract startup exception data
+            const exceptionType = startupExceptionCard.querySelector('.startup-exception-type').textContent;
+            const exceptionCount = startupExceptionCard.querySelector('.startup-exception-count-badge').textContent;
+            const exceptionMessage = startupExceptionCard.querySelector('.startup-exception-message').textContent;
+            const stackTrace = startupExceptionCard.querySelector('.stack-trace')?.textContent || 'No stack trace available';
+            
+            // Extract module information if present
+            const moduleItems = startupExceptionCard.querySelectorAll('.module-info-item');
+            const moduleInfo = Array.from(moduleItems).map(item => item.textContent).join('\n');
+            
+            // Extract timestamp info
+            const timestampInfo = startupExceptionCard.querySelector('.startup-timestamp-info')?.textContent || '';
+            
+            // Extract inner exception if present
+            const innerException = startupExceptionCard.querySelector('.startup-exception-inner')?.textContent || '';
+            
+            // Build clipboard content
+            let clipboardContent = `ASP.NET Core Startup Exception Type: ${exceptionType}\n`;
+            clipboardContent += `Occurrences: ${exceptionCount}\n\n`;
+            clipboardContent += `Message:\n${exceptionMessage}\n\n`;
+            
+            if (innerException) {
+                clipboardContent += `${innerException}\n\n`;
+            }
+            
+            if (moduleInfo) {
+                clipboardContent += `Environment Details:\n${moduleInfo}\n\n`;
+            }
+            
+            clipboardContent += `Stack Trace:\n${stackTrace}\n\n`;
+            
+            if (timestampInfo) {
+                clipboardContent += `Timing Information:\n${timestampInfo}`;
+            }
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(clipboardContent).then(() => {
+                // Show success feedback
+                const originalText = button.textContent;
+                const originalClass = button.className;
+                
+                button.textContent = 'Copied!';
+                button.classList.add('copy-success');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.className = originalClass;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy startup exception: ', err);
+                alert('Failed to copy to clipboard. Please try again.');
+            });
+        }
+
+        // Toggle URLs functionality
+        function toggleUrls(button) {
+            const hiddenUrls = button.nextElementSibling;
+            if (hiddenUrls.style.display === 'none') {
+                hiddenUrls.style.display = 'block';
+                button.textContent = 'Show fewer URLs';
+            } else {
+                hiddenUrls.style.display = 'none';
+                const hiddenCount = hiddenUrls.children.length;
+                button.textContent = `Show ${hiddenCount} more URLs`;
+            }
+        }
+
+        // Chart data
+        const availabilityData = [{"timestamp":"2025-08-11T20:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T20:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T20:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T20:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T20:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T21:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T21:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T21:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T21:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T21:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T21:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T21:30:00.000Z","appAvailability":67.69,"platformAvailability":100},{"timestamp":"2025-08-11T21:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T21:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T21:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T21:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T21:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T22:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T22:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T22:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T22:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T22:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T22:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T22:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T22:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T22:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T22:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T22:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T22:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T23:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T23:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T23:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T23:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T23:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T23:25:00.000Z","appAvailability":70.42,"platformAvailability":100},{"timestamp":"2025-08-11T23:30:00.000Z","appAvailability":67.61,"platformAvailability":100},{"timestamp":"2025-08-11T23:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T23:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T23:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T23:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-11T23:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T00:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T00:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T00:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T00:15:00.000Z","appAvailability":70.77,"platformAvailability":100},{"timestamp":"2025-08-12T00:20:00.000Z","appAvailability":71.43,"platformAvailability":100},{"timestamp":"2025-08-12T00:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T00:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T00:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T00:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T00:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T00:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T00:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T01:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T01:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T01:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T01:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T01:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T01:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T01:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T01:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T01:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T01:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T01:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T01:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T02:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T02:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T02:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T02:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T02:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T02:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T02:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T02:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T02:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T02:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T02:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T02:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T03:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T03:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T03:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T03:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T03:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T03:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T03:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T03:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T03:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T03:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T03:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T03:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T04:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T04:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T04:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T04:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T04:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T04:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T04:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T04:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T04:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T04:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T04:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T04:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T05:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T05:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T05:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T05:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T05:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T05:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T05:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T05:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T05:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T05:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T05:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T05:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T06:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T06:05:00.000Z","appAvailability":68.85,"platformAvailability":100},{"timestamp":"2025-08-12T06:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T06:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T06:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T06:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T06:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T06:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T06:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T06:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T06:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T06:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T07:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T07:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T07:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T07:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T07:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T07:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T07:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T07:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T07:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T07:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T07:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T07:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T08:00:00.000Z","appAvailability":69.64,"platformAvailability":100},{"timestamp":"2025-08-12T08:05:00.000Z","appAvailability":68.75,"platformAvailability":100},{"timestamp":"2025-08-12T08:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T08:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T08:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T08:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T08:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T08:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T08:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T08:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T08:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T08:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T09:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T09:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T09:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T09:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T09:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T09:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T09:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T09:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T09:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T09:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T09:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T09:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T10:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T10:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T10:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T10:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T10:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T10:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T10:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T10:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T10:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T10:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T10:50:00.000Z","appAvailability":70.77,"platformAvailability":100},{"timestamp":"2025-08-12T10:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T11:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T11:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T11:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T11:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T11:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T11:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T11:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T11:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T11:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T11:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T11:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T11:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T12:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T12:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T12:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T12:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T12:20:00.000Z","appAvailability":70.77,"platformAvailability":100},{"timestamp":"2025-08-12T12:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T12:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T12:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T12:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T12:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T12:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T12:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T13:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T13:05:00.000Z","appAvailability":70.77,"platformAvailability":100},{"timestamp":"2025-08-12T13:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T13:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T13:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T13:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T13:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T13:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T13:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T13:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T13:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T13:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T14:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T14:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T14:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T14:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T14:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T14:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T14:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T14:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T14:40:00.000Z","appAvailability":70.77,"platformAvailability":100},{"timestamp":"2025-08-12T14:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T14:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T14:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T15:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T15:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T15:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T15:15:00.000Z","appAvailability":70.77,"platformAvailability":100},{"timestamp":"2025-08-12T15:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T15:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T15:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T15:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T15:40:00.000Z","appAvailability":70.77,"platformAvailability":100},{"timestamp":"2025-08-12T15:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T15:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T15:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T16:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T16:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T16:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T16:15:00.000Z","appAvailability":70.77,"platformAvailability":100},{"timestamp":"2025-08-12T16:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T16:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T16:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T16:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T16:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T16:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T16:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T16:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T17:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T17:05:00.000Z","appAvailability":70.77,"platformAvailability":100},{"timestamp":"2025-08-12T17:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T17:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T17:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T17:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T17:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T17:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T17:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T17:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T17:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T17:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T18:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T18:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T18:10:00.000Z","appAvailability":70.77,"platformAvailability":100},{"timestamp":"2025-08-12T18:15:00.000Z","appAvailability":70.77,"platformAvailability":100},{"timestamp":"2025-08-12T18:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T18:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T18:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T18:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T18:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T18:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T18:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T18:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T19:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T19:05:00.000Z","appAvailability":70.77,"platformAvailability":100},{"timestamp":"2025-08-12T19:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T19:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T19:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T19:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T19:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T19:35:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T19:40:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T19:45:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T19:50:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T19:55:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T20:00:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T20:05:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T20:10:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T20:15:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T20:20:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T20:25:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T20:30:00.000Z","appAvailability":69.23,"platformAvailability":100},{"timestamp":"2025-08-12T20:35:00.000Z","appAvailability":69.23,"platformAvailability":100}];
+        const requestsData = [{"timestamp":"2025-08-11T20:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T20:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T20:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T20:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T20:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T21:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T21:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T21:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T21:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T21:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T21:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T21:30:00.000Z","total":65,"successful":44,"errors":21,"http2xx":14,"http3xx":0,"http4xx":30,"http5xx":21},{"timestamp":"2025-08-11T21:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T21:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T21:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T21:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T21:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T22:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T22:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T22:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T22:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T22:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T22:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T22:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T22:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T22:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T22:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T22:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T22:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T23:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T23:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T23:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T23:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T23:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T23:25:00.000Z","total":71,"successful":50,"errors":21,"http2xx":15,"http3xx":0,"http4xx":35,"http5xx":21},{"timestamp":"2025-08-11T23:30:00.000Z","total":71,"successful":48,"errors":23,"http2xx":16,"http3xx":0,"http4xx":32,"http5xx":23},{"timestamp":"2025-08-11T23:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T23:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T23:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T23:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-11T23:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T00:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T00:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T00:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T00:15:00.000Z","total":65,"successful":46,"errors":19,"http2xx":15,"http3xx":0,"http4xx":31,"http5xx":19},{"timestamp":"2025-08-12T00:20:00.000Z","total":70,"successful":50,"errors":20,"http2xx":16,"http3xx":1,"http4xx":33,"http5xx":20},{"timestamp":"2025-08-12T00:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T00:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T00:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T00:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T00:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T00:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T00:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T01:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T01:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T01:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T01:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T01:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T01:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T01:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T01:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T01:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T01:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T01:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T01:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T02:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T02:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T02:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T02:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T02:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T02:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T02:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T02:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T02:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T02:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T02:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T02:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T03:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T03:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T03:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T03:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T03:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T03:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T03:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T03:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T03:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T03:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T03:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T03:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T04:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T04:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T04:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T04:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T04:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T04:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T04:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T04:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T04:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T04:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T04:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T04:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T05:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T05:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T05:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T05:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T05:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T05:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T05:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T05:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T05:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T05:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T05:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T05:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T06:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T06:05:00.000Z","total":61,"successful":42,"errors":19,"http2xx":14,"http3xx":0,"http4xx":28,"http5xx":19},{"timestamp":"2025-08-12T06:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T06:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T06:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T06:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T06:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T06:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T06:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T06:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T06:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T06:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T07:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T07:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T07:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T07:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T07:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T07:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T07:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T07:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T07:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T07:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T07:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T07:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T08:00:00.000Z","total":56,"successful":39,"errors":17,"http2xx":13,"http3xx":0,"http4xx":26,"http5xx":17},{"timestamp":"2025-08-12T08:05:00.000Z","total":64,"successful":44,"errors":20,"http2xx":14,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T08:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T08:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T08:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T08:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T08:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T08:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T08:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T08:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T08:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T08:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T09:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T09:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T09:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T09:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T09:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T09:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T09:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T09:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T09:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T09:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T09:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T09:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T10:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T10:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T10:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T10:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T10:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T10:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T10:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T10:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T10:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T10:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T10:50:00.000Z","total":65,"successful":46,"errors":19,"http2xx":15,"http3xx":0,"http4xx":31,"http5xx":19},{"timestamp":"2025-08-12T10:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T11:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T11:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T11:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T11:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T11:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T11:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T11:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T11:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T11:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T11:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T11:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T11:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T12:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T12:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T12:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T12:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T12:20:00.000Z","total":65,"successful":46,"errors":19,"http2xx":15,"http3xx":0,"http4xx":31,"http5xx":19},{"timestamp":"2025-08-12T12:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T12:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T12:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T12:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T12:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T12:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T12:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T13:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T13:05:00.000Z","total":65,"successful":46,"errors":19,"http2xx":15,"http3xx":0,"http4xx":31,"http5xx":19},{"timestamp":"2025-08-12T13:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T13:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T13:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T13:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T13:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T13:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T13:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T13:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T13:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T13:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T14:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T14:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T14:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T14:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T14:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T14:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T14:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T14:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T14:40:00.000Z","total":65,"successful":46,"errors":19,"http2xx":15,"http3xx":0,"http4xx":31,"http5xx":19},{"timestamp":"2025-08-12T14:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T14:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T14:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T15:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T15:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T15:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T15:15:00.000Z","total":65,"successful":46,"errors":19,"http2xx":15,"http3xx":0,"http4xx":31,"http5xx":19},{"timestamp":"2025-08-12T15:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T15:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T15:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T15:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T15:40:00.000Z","total":65,"successful":46,"errors":19,"http2xx":15,"http3xx":0,"http4xx":31,"http5xx":19},{"timestamp":"2025-08-12T15:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T15:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T15:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T16:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T16:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T16:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T16:15:00.000Z","total":65,"successful":46,"errors":19,"http2xx":15,"http3xx":0,"http4xx":31,"http5xx":19},{"timestamp":"2025-08-12T16:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T16:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T16:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T16:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T16:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T16:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T16:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T16:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T17:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T17:05:00.000Z","total":65,"successful":46,"errors":19,"http2xx":15,"http3xx":0,"http4xx":31,"http5xx":19},{"timestamp":"2025-08-12T17:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T17:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T17:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T17:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T17:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T17:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T17:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T17:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T17:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T17:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T18:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T18:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T18:10:00.000Z","total":65,"successful":46,"errors":19,"http2xx":15,"http3xx":0,"http4xx":31,"http5xx":19},{"timestamp":"2025-08-12T18:15:00.000Z","total":65,"successful":46,"errors":19,"http2xx":15,"http3xx":0,"http4xx":31,"http5xx":19},{"timestamp":"2025-08-12T18:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T18:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T18:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T18:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T18:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T18:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T18:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T18:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T19:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T19:05:00.000Z","total":65,"successful":46,"errors":19,"http2xx":15,"http3xx":0,"http4xx":31,"http5xx":19},{"timestamp":"2025-08-12T19:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T19:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T19:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T19:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T19:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T19:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T19:40:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T19:45:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T19:50:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T19:55:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T20:00:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T20:05:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T20:10:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T20:15:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T20:20:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T20:25:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T20:30:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20},{"timestamp":"2025-08-12T20:35:00.000Z","total":65,"successful":45,"errors":20,"http2xx":15,"http3xx":0,"http4xx":30,"http5xx":20}];
+        const latencyData = [{"timestamp":"2025-08-11T13:35:00.000Z","p50":703,"p90":15859,"p95":16203},{"timestamp":"2025-08-11T13:40:00.000Z","p50":1360,"p90":16610,"p95":17484},{"timestamp":"2025-08-11T13:45:00.000Z","p50":859,"p90":16125,"p95":16297},{"timestamp":"2025-08-11T13:50:00.000Z","p50":2375,"p90":15422,"p95":16500},{"timestamp":"2025-08-11T13:55:00.000Z","p50":2531,"p90":15563,"p95":16625},{"timestamp":"2025-08-11T14:00:00.000Z","p50":609,"p90":16281,"p95":16875},{"timestamp":"2025-08-11T14:05:00.000Z","p50":750,"p90":16469,"p95":17156},{"timestamp":"2025-08-11T14:10:00.000Z","p50":2641,"p90":16250,"p95":16469},{"timestamp":"2025-08-11T14:15:00.000Z","p50":2656,"p90":16391,"p95":16406},{"timestamp":"2025-08-11T14:20:00.000Z","p50":2047,"p90":16375,"p95":16672},{"timestamp":"2025-08-11T14:25:00.000Z","p50":2969,"p90":16188,"p95":17047},{"timestamp":"2025-08-11T14:30:00.000Z","p50":2140,"p90":16907,"p95":17359},{"timestamp":"2025-08-11T14:35:00.000Z","p50":2656,"p90":16250,"p95":16484},{"timestamp":"2025-08-11T14:40:00.000Z","p50":3781,"p90":16219,"p95":16250},{"timestamp":"2025-08-11T14:45:00.000Z","p50":328,"p90":16954,"p95":17015},{"timestamp":"2025-08-11T14:50:00.000Z","p50":1062,"p90":16235,"p95":16250},{"timestamp":"2025-08-11T14:55:00.000Z","p50":1093,"p90":16234,"p95":16313},{"timestamp":"2025-08-11T15:00:00.000Z","p50":422,"p90":16953,"p95":17218},{"timestamp":"2025-08-11T15:05:00.000Z","p50":2484,"p90":15750,"p95":16172},{"timestamp":"2025-08-11T15:10:00.000Z","p50":1313,"p90":16781,"p95":17312},{"timestamp":"2025-08-11T15:15:00.000Z","p50":766,"p90":16219,"p95":17734},{"timestamp":"2025-08-11T15:20:00.000Z","p50":594,"p90":16531,"p95":16844},{"timestamp":"2025-08-11T15:25:00.000Z","p50":1797,"p90":16204,"p95":17000},{"timestamp":"2025-08-11T15:30:00.000Z","p50":3250,"p90":16515,"p95":17594},{"timestamp":"2025-08-11T15:35:00.000Z","p50":468,"p90":16219,"p95":17218},{"timestamp":"2025-08-11T15:40:00.000Z","p50":922,"p90":17000,"p95":17469},{"timestamp":"2025-08-11T15:45:00.000Z","p50":204,"p90":17203,"p95":17235},{"timestamp":"2025-08-11T15:50:00.000Z","p50":625,"p90":16531,"p95":17141},{"timestamp":"2025-08-11T15:55:00.000Z","p50":1985,"p90":15906,"p95":16500},{"timestamp":"2025-08-11T16:00:00.000Z","p50":313,"p90":16312,"p95":17250},{"timestamp":"2025-08-11T16:05:00.000Z","p50":78,"p90":16312,"p95":16641},{"timestamp":"2025-08-11T16:10:00.000Z","p50":469,"p90":16750,"p95":17219},{"timestamp":"2025-08-11T16:15:00.000Z","p50":6078,"p90":15906,"p95":16922},{"timestamp":"2025-08-11T16:20:00.000Z","p50":1109,"p90":16203,"p95":16484},{"timestamp":"2025-08-11T16:25:00.000Z","p50":312,"p90":16938,"p95":17125},{"timestamp":"2025-08-11T16:30:00.000Z","p50":14765,"p90":16984,"p95":17172},{"timestamp":"2025-08-11T16:35:00.000Z","p50":1094,"p90":16187,"p95":16235},{"timestamp":"2025-08-11T16:40:00.000Z","p50":1688,"p90":15875,"p95":16547},{"timestamp":"2025-08-11T16:45:00.000Z","p50":672,"p90":17156,"p95":17281},{"timestamp":"2025-08-11T16:50:00.000Z","p50":1125,"p90":16297,"p95":16485},{"timestamp":"2025-08-11T16:55:00.000Z","p50":531,"p90":14875,"p95":16797},{"timestamp":"2025-08-11T17:00:00.000Z","p50":1219,"p90":16391,"p95":16672},{"timestamp":"2025-08-11T17:05:00.000Z","p50":1422,"p90":15656,"p95":17766},{"timestamp":"2025-08-11T17:10:00.000Z","p50":968,"p90":16203,"p95":16235},{"timestamp":"2025-08-11T17:15:00.000Z","p50":984,"p90":18312,"p95":19156},{"timestamp":"2025-08-11T17:20:00.000Z","p50":359,"p90":16985,"p95":17047},{"timestamp":"2025-08-11T17:25:00.000Z","p50":985,"p90":17297,"p95":17328},{"timestamp":"2025-08-11T17:30:00.000Z","p50":890,"p90":16734,"p95":16813},{"timestamp":"2025-08-11T17:35:00.000Z","p50":1515,"p90":15610,"p95":15703},{"timestamp":"2025-08-11T17:40:00.000Z","p50":407,"p90":16375,"p95":16500},{"timestamp":"2025-08-11T17:45:00.000Z","p50":516,"p90":16906,"p95":17140},{"timestamp":"2025-08-11T17:50:00.000Z","p50":641,"p90":16609,"p95":16641},{"timestamp":"2025-08-11T17:55:00.000Z","p50":407,"p90":16218,"p95":16610},{"timestamp":"2025-08-11T18:00:00.000Z","p50":656,"p90":17578,"p95":17922},{"timestamp":"2025-08-11T18:05:00.000Z","p50":5094,"p90":16281,"p95":17797},{"timestamp":"2025-08-11T18:10:00.000Z","p50":547,"p90":16765,"p95":17390},{"timestamp":"2025-08-11T18:15:00.000Z","p50":1453,"p90":15500,"p95":16859},{"timestamp":"2025-08-11T18:20:00.000Z","p50":109,"p90":16203,"p95":16297},{"timestamp":"2025-08-11T18:25:00.000Z","p50":2797,"p90":16375,"p95":17000},{"timestamp":"2025-08-11T18:30:00.000Z","p50":3812,"p90":16344,"p95":16641},{"timestamp":"2025-08-11T18:35:00.000Z","p50":984,"p90":15657,"p95":16657},{"timestamp":"2025-08-11T18:40:00.000Z","p50":1563,"p90":16235,"p95":16391},{"timestamp":"2025-08-11T18:45:00.000Z","p50":641,"p90":15437,"p95":16640},{"timestamp":"2025-08-11T18:50:00.000Z","p50":266,"p90":16422,"p95":16766},{"timestamp":"2025-08-11T18:55:00.000Z","p50":1969,"p90":16281,"p95":16813},{"timestamp":"2025-08-11T19:00:00.000Z","p50":953,"p90":15563,"p95":15734},{"timestamp":"2025-08-11T19:05:00.000Z","p50":1563,"p90":15328,"p95":16375},{"timestamp":"2025-08-11T19:10:00.000Z","p50":375,"p90":16344,"p95":16703},{"timestamp":"2025-08-11T19:15:00.000Z","p50":2266,"p90":16234,"p95":16313},{"timestamp":"2025-08-11T19:20:00.000Z","p50":781,"p90":16906,"p95":17203},{"timestamp":"2025-08-11T19:25:00.000Z","p50":2672,"p90":16266,"p95":16266},{"timestamp":"2025-08-11T19:30:00.000Z","p50":1016,"p90":16281,"p95":16313},{"timestamp":"2025-08-11T19:35:00.000Z","p50":1547,"p90":16250,"p95":16281},{"timestamp":"2025-08-11T19:40:00.000Z","p50":453,"p90":15968,"p95":16313},{"timestamp":"2025-08-11T19:45:00.000Z","p50":265,"p90":16453,"p95":16860},{"timestamp":"2025-08-11T19:50:00.000Z","p50":1000,"p90":16547,"p95":17157},{"timestamp":"2025-08-11T19:55:00.000Z","p50":860,"p90":15875,"p95":17469},{"timestamp":"2025-08-11T20:00:00.000Z","p50":360,"p90":16422,"p95":17297},{"timestamp":"2025-08-11T20:05:00.000Z","p50":422,"p90":16500,"p95":16500},{"timestamp":"2025-08-11T20:10:00.000Z","p50":922,"p90":16297,"p95":16719},{"timestamp":"2025-08-11T20:15:00.000Z","p50":515,"p90":16390,"p95":16500},{"timestamp":"2025-08-11T20:20:00.000Z","p50":3671,"p90":16344,"p95":18406},{"timestamp":"2025-08-11T20:25:00.000Z","p50":875,"p90":16312,"p95":16407},{"timestamp":"2025-08-11T20:30:00.000Z","p50":672,"p90":16953,"p95":17031},{"timestamp":"2025-08-11T20:35:00.000Z","p50":1547,"p90":16281,"p95":16579},{"timestamp":"2025-08-11T20:40:00.000Z","p50":1750,"p90":16250,"p95":16812},{"timestamp":"2025-08-11T20:45:00.000Z","p50":578,"p90":16531,"p95":17157},{"timestamp":"2025-08-11T20:50:00.000Z","p50":437,"p90":16438,"p95":16531},{"timestamp":"2025-08-11T20:55:00.000Z","p50":110,"p90":16391,"p95":16828},{"timestamp":"2025-08-11T21:00:00.000Z","p50":281,"p90":16266,"p95":16984},{"timestamp":"2025-08-11T21:05:00.000Z","p50":2672,"p90":16329,"p95":16390},{"timestamp":"2025-08-11T21:10:00.000Z","p50":1906,"p90":16250,"p95":17282},{"timestamp":"2025-08-11T21:15:00.000Z","p50":375,"p90":16203,"p95":16422},{"timestamp":"2025-08-11T21:20:00.000Z","p50":593,"p90":16218,"p95":16250},{"timestamp":"2025-08-11T21:25:00.000Z","p50":2015,"p90":16234,"p95":16344},{"timestamp":"2025-08-11T21:30:00.000Z","p50":1219,"p90":16625,"p95":17281},{"timestamp":"2025-08-11T21:35:00.000Z","p50":453,"p90":16219,"p95":17234},{"timestamp":"2025-08-11T21:40:00.000Z","p50":1391,"p90":16328,"p95":16609},{"timestamp":"2025-08-11T21:45:00.000Z","p50":781,"p90":16359,"p95":16468},{"timestamp":"2025-08-11T21:50:00.000Z","p50":453,"p90":16438,"p95":16500},{"timestamp":"2025-08-11T21:55:00.000Z","p50":641,"p90":16766,"p95":17328},{"timestamp":"2025-08-11T22:00:00.000Z","p50":984,"p90":17063,"p95":17078},{"timestamp":"2025-08-11T22:05:00.000Z","p50":2719,"p90":15281,"p95":15719},{"timestamp":"2025-08-11T22:10:00.000Z","p50":735,"p90":17250,"p95":17453},{"timestamp":"2025-08-11T22:15:00.000Z","p50":422,"p90":16203,"p95":16828},{"timestamp":"2025-08-11T22:20:00.000Z","p50":657,"p90":16843,"p95":17094},{"timestamp":"2025-08-11T22:25:00.000Z","p50":719,"p90":14609,"p95":16343},{"timestamp":"2025-08-11T22:30:00.000Z","p50":1344,"p90":16968,"p95":17125},{"timestamp":"2025-08-11T22:35:00.000Z","p50":1063,"p90":17328,"p95":17500},{"timestamp":"2025-08-11T22:40:00.000Z","p50":1140,"p90":15016,"p95":17265},{"timestamp":"2025-08-11T22:45:00.000Z","p50":1875,"p90":15063,"p95":16375},{"timestamp":"2025-08-11T22:50:00.000Z","p50":1438,"p90":16297,"p95":16750},{"timestamp":"2025-08-11T22:55:00.000Z","p50":1687,"p90":14922,"p95":15032},{"timestamp":"2025-08-11T23:00:00.000Z","p50":532,"p90":17344,"p95":17437},{"timestamp":"2025-08-11T23:05:00.000Z","p50":14500,"p90":17219,"p95":17656},{"timestamp":"2025-08-11T23:10:00.000Z","p50":1344,"p90":16391,"p95":16437},{"timestamp":"2025-08-11T23:15:00.000Z","p50":1187,"p90":16890,"p95":17500},{"timestamp":"2025-08-11T23:20:00.000Z","p50":594,"p90":15329,"p95":16703},{"timestamp":"2025-08-11T23:25:00.000Z","p50":1640,"p90":17032,"p95":17094},{"timestamp":"2025-08-11T23:30:00.000Z","p50":1156,"p90":17140,"p95":17204},{"timestamp":"2025-08-11T23:35:00.000Z","p50":1109,"p90":16282,"p95":17062},{"timestamp":"2025-08-11T23:40:00.000Z","p50":469,"p90":17469,"p95":17563},{"timestamp":"2025-08-11T23:45:00.000Z","p50":2641,"p90":15532,"p95":16031},{"timestamp":"2025-08-11T23:50:00.000Z","p50":969,"p90":15250,"p95":16375},{"timestamp":"2025-08-11T23:55:00.000Z","p50":1234,"p90":15484,"p95":17094},{"timestamp":"2025-08-12T00:00:00.000Z","p50":375,"p90":16297,"p95":16297},{"timestamp":"2025-08-12T00:05:00.000Z","p50":2640,"p90":15656,"p95":15672},{"timestamp":"2025-08-12T00:10:00.000Z","p50":781,"p90":15718,"p95":17422},{"timestamp":"2025-08-12T00:15:00.000Z","p50":1703,"p90":15250,"p95":18140},{"timestamp":"2025-08-12T00:20:00.000Z","p50":750,"p90":16656,"p95":17297},{"timestamp":"2025-08-12T00:25:00.000Z","p50":859,"p90":15344,"p95":15984},{"timestamp":"2025-08-12T00:30:00.000Z","p50":859,"p90":15172,"p95":16360},{"timestamp":"2025-08-12T00:35:00.000Z","p50":1016,"p90":16500,"p95":17734},{"timestamp":"2025-08-12T00:40:00.000Z","p50":469,"p90":15406,"p95":17219},{"timestamp":"2025-08-12T00:45:00.000Z","p50":1594,"p90":15078,"p95":16937},{"timestamp":"2025-08-12T00:50:00.000Z","p50":1891,"p90":15859,"p95":16438},{"timestamp":"2025-08-12T00:55:00.000Z","p50":1094,"p90":15969,"p95":16015},{"timestamp":"2025-08-12T01:00:00.000Z","p50":14172,"p90":16391,"p95":17063},{"timestamp":"2025-08-12T01:05:00.000Z","p50":4203,"p90":15313,"p95":15516},{"timestamp":"2025-08-12T01:10:00.000Z","p50":485,"p90":17344,"p95":17360},{"timestamp":"2025-08-12T01:15:00.000Z","p50":782,"p90":16391,"p95":17828},{"timestamp":"2025-08-12T01:20:00.000Z","p50":750,"p90":17500,"p95":17515},{"timestamp":"2025-08-12T01:25:00.000Z","p50":547,"p90":15391,"p95":17063},{"timestamp":"2025-08-12T01:30:00.000Z","p50":2531,"p90":17719,"p95":17797},{"timestamp":"2025-08-12T01:35:00.000Z","p50":3281,"p90":17437,"p95":17578},{"timestamp":"2025-08-12T01:40:00.000Z","p50":344,"p90":17656,"p95":17843},{"timestamp":"2025-08-12T01:45:00.000Z","p50":469,"p90":15109,"p95":16657},{"timestamp":"2025-08-12T01:50:00.000Z","p50":1296,"p90":15453,"p95":16406},{"timestamp":"2025-08-12T01:55:00.000Z","p50":859,"p90":15407,"p95":15594},{"timestamp":"2025-08-12T02:00:00.000Z","p50":859,"p90":15563,"p95":16781},{"timestamp":"2025-08-12T02:05:00.000Z","p50":2546,"p90":15094,"p95":15250},{"timestamp":"2025-08-12T02:10:00.000Z","p50":641,"p90":14968,"p95":15813},{"timestamp":"2025-08-12T02:15:00.000Z","p50":1094,"p90":17250,"p95":17625},{"timestamp":"2025-08-12T02:20:00.000Z","p50":812,"p90":18047,"p95":18469},{"timestamp":"2025-08-12T02:25:00.000Z","p50":3375,"p90":17265,"p95":17484},{"timestamp":"2025-08-12T02:30:00.000Z","p50":2437,"p90":16750,"p95":17547},{"timestamp":"2025-08-12T02:35:00.000Z","p50":1844,"p90":17515,"p95":18422},{"timestamp":"2025-08-12T02:40:00.000Z","p50":782,"p90":15563,"p95":17234},{"timestamp":"2025-08-12T02:45:00.000Z","p50":797,"p90":17469,"p95":18218},{"timestamp":"2025-08-12T02:50:00.000Z","p50":1328,"p90":15656,"p95":16031},{"timestamp":"2025-08-12T02:55:00.000Z","p50":1328,"p90":14750,"p95":15438},{"timestamp":"2025-08-12T03:00:00.000Z","p50":3297,"p90":15250,"p95":16485},{"timestamp":"2025-08-12T03:05:00.000Z","p50":2765,"p90":15563,"p95":17672},{"timestamp":"2025-08-12T03:10:00.000Z","p50":1531,"p90":15422,"p95":15610},{"timestamp":"2025-08-12T03:15:00.000Z","p50":704,"p90":15031,"p95":15688},{"timestamp":"2025-08-12T03:20:00.000Z","p50":812,"p90":15281,"p95":15297},{"timestamp":"2025-08-12T03:25:00.000Z","p50":2734,"p90":15547,"p95":15797},{"timestamp":"2025-08-12T03:30:00.000Z","p50":2594,"p90":15641,"p95":16688},{"timestamp":"2025-08-12T03:35:00.000Z","p50":1938,"p90":15531,"p95":16156},{"timestamp":"2025-08-12T03:40:00.000Z","p50":1219,"p90":14938,"p95":15407},{"timestamp":"2025-08-12T03:45:00.000Z","p50":3297,"p90":15312,"p95":15422},{"timestamp":"2025-08-12T03:50:00.000Z","p50":391,"p90":17625,"p95":18000},{"timestamp":"2025-08-12T03:55:00.000Z","p50":359,"p90":15172,"p95":15625},{"timestamp":"2025-08-12T04:00:00.000Z","p50":578,"p90":17281,"p95":17484},{"timestamp":"2025-08-12T04:05:00.000Z","p50":984,"p90":16281,"p95":17297},{"timestamp":"2025-08-12T04:10:00.000Z","p50":500,"p90":15406,"p95":17188},{"timestamp":"2025-08-12T04:15:00.000Z","p50":2406,"p90":17078,"p95":17438},{"timestamp":"2025-08-12T04:20:00.000Z","p50":2047,"p90":16344,"p95":16625},{"timestamp":"2025-08-12T04:25:00.000Z","p50":2422,"p90":16860,"p95":17640},{"timestamp":"2025-08-12T04:30:00.000Z","p50":1094,"p90":15734,"p95":17328},{"timestamp":"2025-08-12T04:35:00.000Z","p50":547,"p90":15079,"p95":16390},{"timestamp":"2025-08-12T04:40:00.000Z","p50":1875,"p90":15016,"p95":15125},{"timestamp":"2025-08-12T04:45:00.000Z","p50":1969,"p90":15688,"p95":17219},{"timestamp":"2025-08-12T04:50:00.000Z","p50":593,"p90":15187,"p95":16313},{"timestamp":"2025-08-12T04:55:00.000Z","p50":890,"p90":16641,"p95":18453},{"timestamp":"2025-08-12T05:00:00.000Z","p50":3266,"p90":16047,"p95":16703},{"timestamp":"2025-08-12T05:05:00.000Z","p50":3031,"p90":16015,"p95":17031},{"timestamp":"2025-08-12T05:10:00.000Z","p50":2500,"p90":17516,"p95":17594},{"timestamp":"2025-08-12T05:15:00.000Z","p50":1671,"p90":15359,"p95":15438},{"timestamp":"2025-08-12T05:20:00.000Z","p50":797,"p90":16296,"p95":18297},{"timestamp":"2025-08-12T05:25:00.000Z","p50":375,"p90":15219,"p95":16359},{"timestamp":"2025-08-12T05:30:00.000Z","p50":2313,"p90":17328,"p95":17485},{"timestamp":"2025-08-12T05:35:00.000Z","p50":4140,"p90":15265,"p95":16094},{"timestamp":"2025-08-12T05:40:00.000Z","p50":1094,"p90":15328,"p95":15406},{"timestamp":"2025-08-12T05:45:00.000Z","p50":1969,"p90":15125,"p95":17297},{"timestamp":"2025-08-12T05:50:00.000Z","p50":4844,"p90":16469,"p95":17937},{"timestamp":"2025-08-12T05:55:00.000Z","p50":922,"p90":15078,"p95":16203},{"timestamp":"2025-08-12T06:00:00.000Z","p50":1875,"p90":15969,"p95":16750},{"timestamp":"2025-08-12T06:05:00.000Z","p50":578,"p90":15891,"p95":17547},{"timestamp":"2025-08-12T06:10:00.000Z","p50":2344,"p90":17375,"p95":17562},{"timestamp":"2025-08-12T06:15:00.000Z","p50":3579,"p90":17625,"p95":17672},{"timestamp":"2025-08-12T06:20:00.000Z","p50":2437,"p90":15812,"p95":15828},{"timestamp":"2025-08-12T06:25:00.000Z","p50":5062,"p90":17328,"p95":17562},{"timestamp":"2025-08-12T06:30:00.000Z","p50":344,"p90":16250,"p95":17516},{"timestamp":"2025-08-12T06:35:00.000Z","p50":2938,"p90":16078,"p95":17125},{"timestamp":"2025-08-12T06:40:00.000Z","p50":719,"p90":15859,"p95":16407},{"timestamp":"2025-08-12T06:45:00.000Z","p50":5406,"p90":17625,"p95":17922},{"timestamp":"2025-08-12T06:50:00.000Z","p50":3593,"p90":15735,"p95":15859},{"timestamp":"2025-08-12T06:55:00.000Z","p50":3234,"p90":15703,"p95":15938},{"timestamp":"2025-08-12T07:00:00.000Z","p50":2688,"p90":17172,"p95":18422},{"timestamp":"2025-08-12T07:05:00.000Z","p50":1953,"p90":15110,"p95":15703},{"timestamp":"2025-08-12T07:10:00.000Z","p50":1297,"p90":16625,"p95":16828},{"timestamp":"2025-08-12T07:15:00.000Z","p50":1719,"p90":17390,"p95":17579},{"timestamp":"2025-08-12T07:20:00.000Z","p50":875,"p90":17328,"p95":17422},{"timestamp":"2025-08-12T07:25:00.000Z","p50":985,"p90":16187,"p95":17047},{"timestamp":"2025-08-12T07:30:00.000Z","p50":5032,"p90":16266,"p95":16297},{"timestamp":"2025-08-12T07:35:00.000Z","p50":1344,"p90":14969,"p95":16375},{"timestamp":"2025-08-12T07:40:00.000Z","p50":6531,"p90":17250,"p95":18343},{"timestamp":"2025-08-12T07:45:00.000Z","p50":2156,"p90":15390,"p95":16547},{"timestamp":"2025-08-12T07:50:00.000Z","p50":3469,"p90":16141,"p95":17109},{"timestamp":"2025-08-12T07:55:00.000Z","p50":1516,"p90":16735,"p95":16921},{"timestamp":"2025-08-12T08:00:00.000Z","p50":1172,"p90":15859,"p95":17531},{"timestamp":"2025-08-12T08:05:00.000Z","p50":1125,"p90":15110,"p95":17407},{"timestamp":"2025-08-12T08:10:00.000Z","p50":828,"p90":17312,"p95":17437},{"timestamp":"2025-08-12T08:15:00.000Z","p50":625,"p90":16640,"p95":17312},{"timestamp":"2025-08-12T08:20:00.000Z","p50":1016,"p90":16610,"p95":16781},{"timestamp":"2025-08-12T08:25:00.000Z","p50":2016,"p90":17328,"p95":17547},{"timestamp":"2025-08-12T08:30:00.000Z","p50":266,"p90":16500,"p95":16750},{"timestamp":"2025-08-12T08:35:00.000Z","p50":250,"p90":16469,"p95":16906},{"timestamp":"2025-08-12T08:40:00.000Z","p50":2328,"p90":17515,"p95":18984},{"timestamp":"2025-08-12T08:45:00.000Z","p50":969,"p90":16625,"p95":16718},{"timestamp":"2025-08-12T08:50:00.000Z","p50":2687,"p90":15625,"p95":16328},{"timestamp":"2025-08-12T08:55:00.000Z","p50":1328,"p90":16766,"p95":16890},{"timestamp":"2025-08-12T09:00:00.000Z","p50":3797,"p90":17218,"p95":18781},{"timestamp":"2025-08-12T09:05:00.000Z","p50":1000,"p90":16437,"p95":16468},{"timestamp":"2025-08-12T09:10:00.000Z","p50":1906,"p90":16500,"p95":16563},{"timestamp":"2025-08-12T09:15:00.000Z","p50":2390,"p90":16281,"p95":16438},{"timestamp":"2025-08-12T09:20:00.000Z","p50":828,"p90":16609,"p95":16844},{"timestamp":"2025-08-12T09:25:00.000Z","p50":312,"p90":16610,"p95":16813},{"timestamp":"2025-08-12T09:30:00.000Z","p50":2359,"p90":16719,"p95":17093},{"timestamp":"2025-08-12T09:35:00.000Z","p50":547,"p90":16625,"p95":17219},{"timestamp":"2025-08-12T09:40:00.000Z","p50":1938,"p90":16297,"p95":16390},{"timestamp":"2025-08-12T09:45:00.000Z","p50":1234,"p90":16516,"p95":16812},{"timestamp":"2025-08-12T09:50:00.000Z","p50":1953,"p90":15781,"p95":15781},{"timestamp":"2025-08-12T09:55:00.000Z","p50":1296,"p90":15579,"p95":17563},{"timestamp":"2025-08-12T10:00:00.000Z","p50":453,"p90":16359,"p95":17250},{"timestamp":"2025-08-12T10:05:00.000Z","p50":625,"p90":16750,"p95":17312},{"timestamp":"2025-08-12T10:10:00.000Z","p50":234,"p90":16281,"p95":16625},{"timestamp":"2025-08-12T10:15:00.000Z","p50":2250,"p90":17172,"p95":17187},{"timestamp":"2025-08-12T10:20:00.000Z","p50":454,"p90":16375,"p95":16672},{"timestamp":"2025-08-12T10:25:00.000Z","p50":1031,"p90":16813,"p95":17656},{"timestamp":"2025-08-12T10:30:00.000Z","p50":63,"p90":16469,"p95":16547},{"timestamp":"2025-08-12T10:35:00.000Z","p50":547,"p90":17031,"p95":17875},{"timestamp":"2025-08-12T10:40:00.000Z","p50":1078,"p90":15765,"p95":16235},{"timestamp":"2025-08-12T10:45:00.000Z","p50":8203,"p90":17000,"p95":18375},{"timestamp":"2025-08-12T10:50:00.000Z","p50":781,"p90":16796,"p95":17266},{"timestamp":"2025-08-12T10:55:00.000Z","p50":3297,"p90":17422,"p95":17719},{"timestamp":"2025-08-12T11:00:00.000Z","p50":3843,"p90":17265,"p95":17625},{"timestamp":"2025-08-12T11:05:00.000Z","p50":1250,"p90":17250,"p95":17954},{"timestamp":"2025-08-12T11:10:00.000Z","p50":1172,"p90":16578,"p95":17375},{"timestamp":"2025-08-12T11:15:00.000Z","p50":2875,"p90":17531,"p95":19922},{"timestamp":"2025-08-12T11:20:00.000Z","p50":1688,"p90":15812,"p95":17281},{"timestamp":"2025-08-12T11:25:00.000Z","p50":500,"p90":16938,"p95":17140},{"timestamp":"2025-08-12T11:30:00.000Z","p50":1532,"p90":17547,"p95":19578},{"timestamp":"2025-08-12T11:35:00.000Z","p50":2000,"p90":16625,"p95":16906},{"timestamp":"2025-08-12T11:40:00.000Z","p50":1656,"p90":16500,"p95":16781},{"timestamp":"2025-08-12T11:45:00.000Z","p50":1578,"p90":17313,"p95":17609},{"timestamp":"2025-08-12T11:50:00.000Z","p50":2172,"p90":15156,"p95":15187},{"timestamp":"2025-08-12T11:55:00.000Z","p50":563,"p90":16531,"p95":16579},{"timestamp":"2025-08-12T12:00:00.000Z","p50":485,"p90":17250,"p95":17312},{"timestamp":"2025-08-12T12:05:00.000Z","p50":3953,"p90":16391,"p95":16687},{"timestamp":"2025-08-12T12:10:00.000Z","p50":3078,"p90":15485,"p95":15953},{"timestamp":"2025-08-12T12:15:00.000Z","p50":1421,"p90":15937,"p95":16312},{"timestamp":"2025-08-12T12:20:00.000Z","p50":2328,"p90":16453,"p95":16781},{"timestamp":"2025-08-12T12:25:00.000Z","p50":2109,"p90":16171,"p95":17594},{"timestamp":"2025-08-12T12:30:00.000Z","p50":1110,"p90":15781,"p95":16375},{"timestamp":"2025-08-12T12:35:00.000Z","p50":1047,"p90":17516,"p95":17625},{"timestamp":"2025-08-12T12:40:00.000Z","p50":1172,"p90":16078,"p95":16657},{"timestamp":"2025-08-12T12:45:00.000Z","p50":781,"p90":16125,"p95":16437},{"timestamp":"2025-08-12T12:50:00.000Z","p50":1187,"p90":16593,"p95":16969},{"timestamp":"2025-08-12T12:55:00.000Z","p50":953,"p90":15813,"p95":17359},{"timestamp":"2025-08-12T13:00:00.000Z","p50":563,"p90":16062,"p95":17281},{"timestamp":"2025-08-12T13:05:00.000Z","p50":1453,"p90":16297,"p95":17813},{"timestamp":"2025-08-12T13:10:00.000Z","p50":766,"p90":16344,"p95":17500},{"timestamp":"2025-08-12T13:15:00.000Z","p50":4234,"p90":15640,"p95":16594},{"timestamp":"2025-08-12T13:20:00.000Z","p50":2750,"p90":15875,"p95":16500},{"timestamp":"2025-08-12T13:25:00.000Z","p50":2766,"p90":16625,"p95":17438},{"timestamp":"2025-08-12T13:30:00.000Z","p50":1141,"p90":17531,"p95":17531},{"timestamp":"2025-08-12T13:35:00.000Z","p50":2078,"p90":16547,"p95":17546}];
+
+        // Chart configuration
+        function getChartConfig() {
+            const isLight = document.body.getAttribute('data-theme') === 'light';
+            const gridColor = isLight ? '#e2e8f0' : '#475569';
+            const textColor = isLight ? '#1e293b' : '#f8fafc';
+            
+            return {
+                displayModeBar: false,
+                responsive: true,
+                paper_bgcolor: 'transparent',
+                plot_bgcolor: 'transparent',
+                font: {
+                    family: 'Poppins, sans-serif',
+                    color: textColor
+                },
+                margin: { t: 20, r: 20, b: 60, l: 60 }
+            };
+        }
+
+        function initializeCharts() {
+            const chartConfig = getChartConfig();
+            const isLight = document.body.getAttribute('data-theme') === 'light';
+            const gridColor = isLight ? '#e2e8f0' : '#475569';
+
+            // Availability Chart
+            if (availabilityData && availabilityData.length > 0) {
+                const appAvailabilityTrace = {
+                    x: availabilityData.map(d => d.timestamp),
+                    y: availabilityData.map(d => d.appAvailability),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    line: { color: '#10b981', width: 3 },
+                    marker: { size: 6, color: '#10b981' },
+                    name: 'App Availability',
+                    hovertemplate: '%{y:.2f}%<extra></extra>'
+                };
+
+                const platformAvailabilityTrace = {
+                    x: availabilityData.map(d => d.timestamp),
+                    y: availabilityData.map(d => d.platformAvailability),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    line: { color: '#3b82f6', width: 3 },
+                    marker: { size: 6, color: '#3b82f6' },
+                    name: 'Platform Availability',
+                    hovertemplate: '%{y:.2f}%<extra></extra>'
+                };
+
+                Plotly.newPlot('availabilityChart', [appAvailabilityTrace, platformAvailabilityTrace], {
+                    ...chartConfig,
+                    xaxis: { title: 'Time (UTC)', gridcolor: gridColor },
+                    yaxis: { 
+                        title: 'Availability (%)', 
+                        gridcolor: gridColor,
+                        range: [0, 100]  // Force Y-axis to 0-100 range
+                    }
+                });
+            }
+
+            // Requests Chart - Grouped bar chart showing successful and failed requests
+            if (requestsData && requestsData.length > 0) {
+                const successRequests = requestsData.map(d => d.successful);
+                const errorRequests = requestsData.map(d => d.errors);
+
+                const successTrace = {
+                    x: requestsData.map(d => d.timestamp),
+                    y: successRequests,
+                    type: 'bar',
+                    name: 'Total Requests',
+                    marker: { color: '#10b981' },
+                    hovertemplate: '%{y}<extra></extra>'
+                };
+
+                const errorTrace = {
+                    x: requestsData.map(d => d.timestamp),
+                    y: errorRequests,
+                    type: 'bar',
+                    name: 'Failed Requests',
+                    marker: { color: '#ef4444' },
+                    hovertemplate: '%{y}<extra></extra>'
+                };
+
+                Plotly.newPlot('requestsChart', [successTrace, errorTrace], {
+                    ...chartConfig,
+                    xaxis: { title: 'Time (UTC)', gridcolor: gridColor },
+                    yaxis: { title: 'Request Count', gridcolor: gridColor },
+                    barmode: 'group'
+                });
+            }
+
+            // Latency Chart - Show percentiles
+            if (latencyData && latencyData.length > 0) {
+                const p50Trace = {
+                    x: latencyData.map(d => d.timestamp),
+                    y: latencyData.map(d => d.p50),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    line: { color: '#10b981', width: 2 },
+                    marker: { size: 4, color: '#10b981' },
+                    name: '50th Percentile',
+                    hovertemplate: '%{y:.0f}ms<extra></extra>'
+                };
+
+                const p90Trace = {
+                    x: latencyData.map(d => d.timestamp),
+                    y: latencyData.map(d => d.p90),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    line: { color: '#f59e0b', width: 2 },
+                    marker: { size: 4, color: '#f59e0b' },
+                    name: '90th Percentile',
+                    hovertemplate: '%{y:.0f}ms<extra></extra>'
+                };
+
+                const p95Trace = {
+                    x: latencyData.map(d => d.timestamp),
+                    y: latencyData.map(d => d.p95),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    line: { color: '#ef4444', width: 2 },
+                    marker: { size: 4, color: '#ef4444' },
+                    name: '95th Percentile',
+                    hovertemplate: '%{y:.0f}ms<extra></extra>'
+                };
+
+                Plotly.newPlot('latencyChart', [p50Trace, p90Trace, p95Trace], {
+                    ...chartConfig,
+                    xaxis: { title: 'Time (UTC)', gridcolor: gridColor },
+                    yaxis: { title: 'Latency (ms)', gridcolor: gridColor }
+                });
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            setTimeout(initializeCharts, 100);
+        });
+    </script>
+</body>
+</html>

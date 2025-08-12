@@ -11,25 +11,6 @@ For detailed information about the tool's capabilities and diagnostic logic, see
 - **[What Does The Tool Do](WhatDoesTheToolDo.md)** - Comprehensive guide to diagnostic capabilities and analysis workflow
 - **[Workflow Diagram](WorkflowDiagram.md)** - Visual representation of the diagnostic process and decision flow
 
-
-## Key Benefits
-
-### ⚡ **Fast Problem Resolution**
-- Get actionable insights in seconds for HTTP 5xx error analysis
-- Automated root cause analysis for the most common server error scenarios
-- Clear priority-ordered recommendations based on error frequency
-
-### 🎯 **Focused Diagnostics**
-- Specifically targets Windows web app HTTP availability issues
-- Uses Azure's SRE detector APIs for accurate failure data
-- Concentrates analysis on the most impactful errors (95% coverage approach)
-
-### 📋 **Clear Reporting**
-- Easy-to-understand health status (Healthy/Warning/Critical/Unknown)
-- Detailed observations with specific error counts and percentages
-- Structured recommendations tailored to each HTTP error type
-
-
 ## When to Use WindowsWebAppDiagnoser
 
 - ✅ **HTTP 5xx Error Investigation** - When your web app is experiencing server errors (500, 502, 503, etc.)
@@ -40,14 +21,15 @@ For detailed information about the tool's capabilities and diagnostic logic, see
 - ✅ **Basic Health Checks** - To get a quick overview of web app availability status
 
 
-# Download - Windows
+## Download - Windows
 Get the latest release from the releases section, or run the following command to download the tool on Windows
 
 ```
 curl -L -o WindowsWebAppDiagnoser.exe https://github.com/puneetg1983/WindowsWebAppDiagnoser/releases/latest/download/WindowsWebAppDiagnoser.exe
 ```
 
-# Azure Console (aka Cloud Shell)
+
+## Azure Console (aka Cloud Shell)
 You can run this program from Azure Console by going to http://portal.azure.com/#cloudshell and running the below
 
 ```
@@ -60,3 +42,9 @@ Then, run the tool like this
 ```
 
 > Note: For this to work, you "must" 'Switch to Bash' cloud shell because WindowsWebAppDiagnoser (not WindowsWebAppDiagnoser.exe) is a Linux package
+
+---
+
+## Telemetry Collection
+
+WindowsWebAppDiagnoser collects telemetry about tool runs to help improve the product. Special care is taken to ensure that no personally identifiable information (PII) or secrets are captured in telemetry. If the tool detects any exception messages, it masks them before logging to further protect sensitive information.

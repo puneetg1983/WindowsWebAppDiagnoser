@@ -111,6 +111,17 @@ When availability drops below 99.99%, we dive deeper:
 - **500.70-72** - Client Certificate Authentication (70, 71, 72)
 - **500.73-79** - EasyAuth Authentication (73-79)
 - **500.121** - Azure App Service Request Timeout Issues
+  - **Enhanced Analysis**: When 500.121 errors occur within the last 2 hours, the system automatically:
+    - Checks and configures storage account for memory dump collection if not already configured
+    - Captures a memory dump for detailed timeout analysis
+    - Downloads and analyzes memory dump reports (MHT files)
+    - **NEW: Client Connection Analysis** - Analyzes MHT files using DebugDiagReportExtractor to:
+      - Extract and analyze active client connections at the time of memory dump
+      - Identify long-running requests (>30 seconds) that may indicate performance bottlenecks
+      - Calculate average request duration and identify the slowest connections
+      - Group connections by state and provide insights into request patterns
+      - Increase diagnostic scores when significant long-running connections are detected
+    - Provides specific recommendations based on memory dump findings (thread pool starvation, blocking operations, memory pressure, client connection issues, etc.)
 - **500.1000-1020** - IIS Node.js Issues (1000-1020)
 
 ### **HTTP 502 Analysis:**
@@ -132,6 +143,30 @@ When availability drops below 99.99%, we dive deeper:
   - **Module-specific failure analysis** - ASP.NET Core Module issues
   - **Event log analysis with configurable depth** - Startup failures and unhandled exceptions
 - **Prioritized analysis flow**: Module failures → Sub-status codes → Comprehensive resource analysis → General recommendations
+
+### **Memory Dump Analysis and Client Connection Insights**
+
+For timeout-related errors (HTTP 400.604, HTTP 500.121, HTTP 502 with high latency, and HTTP 500.0 high latency scenarios), the tool performs advanced memory dump analysis:
+
+- **Automatic Memory Dump Collection**: When timeout errors occur within the last 2 hours
+- **Storage Account Configuration**: Automatically sets up or validates DaaS storage for memory dump collection
+- **MHT Report Analysis**: Downloads and processes memory dump analysis reports (MHT files) using the integrated DebugDiagReportExtractor
+- **Client Connection Analysis**: 
+  - Extracts active client connections from memory dumps at the time of capture
+  - Identifies long-running requests (>30 seconds) that may indicate performance bottlenecks
+  - Calculates average request duration and identifies the slowest connections
+  - Groups connections by HTTP request state for pattern analysis
+  - Provides insights into request distribution and connection health
+- **Enhanced Scoring**: Diagnostic scores are increased when significant long-running connections are detected, indicating more severe performance issues
+- **Targeted Recommendations**: Generates specific recommendations based on client connection patterns, including suggestions for request timeout configuration, performance optimization, and deadlock detection
+
+This analysis helps identify:
+- Thread pool starvation scenarios
+- Blocking synchronous operations
+- Database connection timeouts
+- Memory pressure conditions
+- Request bottlenecks and stuck connections
+- Application deadlocks and infinite loops
 
 ## **Current Limitations**
 

@@ -50,6 +50,22 @@ flowchart TD
     Y -->|500.121| HH[Request Timeout Issues]
     Y -->|500.1000-1020| II[IIS Node.js Issues]
     
+    %% Special 500.121 enhanced handling
+    HH --> HH1{Errors Within<br/>Last 2 Hours?}
+    HH1 -->|Yes| HH2[Check Storage Account Config]
+    HH2 --> HH3{Storage<br/>Configured?}
+    HH3 -->|No| HH4[Create Storage Account]
+    HH3 -->|Yes| HH5[Capture Memory Dump]
+    HH4 --> HH5
+    HH5 --> HH6[Download MHT Reports]
+    HH6 --> HH6A[Analyze Client Connections<br/>from MHT Files]
+    HH6A --> HH6B{Long-Running<br/>Connections Found?}
+    HH6B -->|Yes| HH6C[Increase Diagnostic Score<br/>Generate Connection Insights]
+    HH6B -->|No| HH6D[Report Healthy Connection Times]
+    HH6C --> HH7[Generate Enhanced Recommendations]
+    HH6D --> HH7
+    HH1 -->|No| HH8[Standard Timeout Analysis]
+    
     %% Special 500.30 handling
     Z --> JJ{Event Logs Have<br/>Startup Exceptions?}
     JJ -->|Yes| KK[Analyze Event Log Details]
@@ -102,6 +118,8 @@ flowchart TD
     FF --> PPP
     GG --> PPP
     HH --> PPP
+    HH7 --> PPP
+    HH8 --> PPP
     II --> PPP
     WW --> PPP
     XX --> PPP
